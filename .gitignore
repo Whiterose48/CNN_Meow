@@ -1,0 +1,17 @@
+# filepath: /Users/iam.pxk/Desktop/CNN_Meow/.gitignore
+__pycache__/
+*.pyc
+.env
+weights/
+uploads/
+*.pt
+*.pth
+.DS_Store
+node_modules/
+dist/
+venv/
+.venv/
+data/raw/
+data/processed/
+wandb/
+runs/

@@ -1,0 +1,7 @@
+# Cat Face Detection Dataset
+path: /Users/iam.pxk/Desktop/CNN_Meow/data/yolo
+train: images/train
+val: images/val
+
+nc: 1
+names: ['cat_face']
