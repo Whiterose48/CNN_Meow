@@ -1,7 +1,0 @@
-Overall Weighted F1: 0.9096
-
-ears: F1=0.9284
-eyes: F1=0.8704
-muzzle: F1=0.8977
-whiskers: F1=0.9398
-head_position: F1=0.9119

@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+/* ── Your Custom Design System ── */
+:root {
+  --font-sans: 'Inter', 'Noto Sans Thai', sans-serif;
+  --color-cream: #FFF8F0;
+  --color-cream-dark: #F0E8DD;
+  --color-sage: #6B8F71;
+  --color-sage-dark: #4A6B4F;
+  --color-sage-light: #A8C5AD;
+  --color-charcoal: #1A1A1A;
+  --color-warm: #E8975F;
+  --color-peach: #FDDCB5;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* ── Cards with 3D Depth ── */
+.card-warm {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, .05);
+  border-radius: 28px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, .06), 0 1px 4px rgba(0, 0, 0, .04);
+  transition: all .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.card-warm:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .1), 0 4px 12px rgba(0, 0, 0, .06);
+  transform: translateY(-6px);
+}
+
+.card-sage {
+  background: var(--color-sage);
+  color: #fff;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(107, 143, 113, .2);
+  transition: all .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+.card-sage:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(107, 143, 113, .3);
+}
+
+.card-dark {
+  background: var(--color-charcoal);
+  color: #fff;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .15);
+  transition: all .4s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  background: var(--color-charcoal);
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 100px;
+  font-weight: 700;
+  transition: all .3s;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: #333;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .18);
+}
+
+.btn-sage {
+  background: var(--color-sage);
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 100px;
+  font-weight: 700;
+  transition: all .3s;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-sage:hover {
+  background: var(--color-sage-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(107, 143, 113, .35);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--color-charcoal);
+  color: var(--color-charcoal);
+  padding: 12px 32px;
+  border-radius: 100px;
+  font-weight: 700;
+  transition: all .3s;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background: var(--color-charcoal);
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+/* ── Utilities ── */
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-sage), var(--color-warm), var(--color-sage), transparent);
+  animation: scan-line 2s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes scan-line {
+  0% {
+    top: -2px;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sage);
+}
