@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, Stars, PerspectiveCamera, Torus, Sphere, MeshDistortMaterial } from '@react-three/drei'
 import { Zap, ShieldCheck, Database } from 'lucide-react'
+import ErrorBoundary from './ErrorBoundary'
 
 // ─── 1. 3D GYROSCOPE SCENE ───
 const Gyroscope = () => {
@@ -87,7 +88,7 @@ export default function Loading({ isLoading }) {
     useEffect(() => {
         if (isLoading) {
             const i = setInterval(() => setProgress(p => {
-                if (p >= 100) return 100;
+                if (p >= 100) { clearInterval(i); return 100; }
                 // สุ่มความเร็วให้ดูสมจริง (ช่วงแรกเร็ว ช่วงหลังช้า)
                 const jump = p < 70 ? Math.floor(Math.random() * 5) + 2 : 1;
                 return Math.min(p + jump, 100);
@@ -118,12 +119,14 @@ export default function Loading({ isLoading }) {
 
                     {/* 3D Layer */}
                     <div className="absolute inset-0 z-0">
-                        <Canvas dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: "high-performance" }}>
-                            <Suspense fallback={null}>
-                                <PerspectiveCamera makeDefault position={[0, 0, 7]} />
-                                <Gyroscope />
-                            </Suspense>
-                        </Canvas>
+                        <ErrorBoundary fallback={<div className="absolute inset-0 bg-[#010409]" />}>
+                            <Canvas dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: "high-performance" }}>
+                                <Suspense fallback={null}>
+                                    <PerspectiveCamera makeDefault position={[0, 0, 7]} />
+                                    <Gyroscope />
+                                </Suspense>
+                            </Canvas>
+                        </ErrorBoundary>
                     </div>
 
                     {/* Background Grid */}

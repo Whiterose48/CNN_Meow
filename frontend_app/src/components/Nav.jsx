@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { User, LogIn, LogOut, LayoutDashboard, Home, Layers, ScanLine, Clock, Activity } from 'lucide-react'
+import { User, LogIn, LogOut, LayoutDashboard, Home, Layers, ScanLine, Clock, Activity, Menu, X } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 // ─── UTILS: DATE FORMATTER ───
@@ -57,6 +57,10 @@ const RealtimeClock = () => {
 // ─── MAIN COMPONENT ───
 export default function Nav({ page, setPage }) {
     const { user, loginWithGoogle, logout } = useAuth();
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    // Close mobile menu on page change
+    useEffect(() => { setMobileOpen(false) }, [page]);
 
     // กำหนดสีและเงาแยกตามแต่ละหน้า
     const links = [
@@ -161,6 +165,14 @@ export default function Nav({ page, setPage }) {
                         {/* ── RIGHT: CLOCK & AUTH ── */}
                         <div className="flex items-center gap-4 pr-2">
 
+                            {/* Mobile Hamburger Button */}
+                            <button
+                                onClick={() => setMobileOpen(!mobileOpen)}
+                                className="lg:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all"
+                            >
+                                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                            </button>
+
                             {/* Clock */}
                             <RealtimeClock />
 
@@ -211,6 +223,72 @@ export default function Nav({ page, setPage }) {
                     </div>
                 </motion.nav>
             </div>
+
+            {/* ── MOBILE DRAWER ── */}
+            <AnimatePresence>
+                {mobileOpen && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setMobileOpen(false)}
+                            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+                        />
+                        <motion.div
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="fixed top-0 right-0 z-50 h-full w-72 bg-[#0f172a]/95 backdrop-blur-2xl border-l border-white/10 p-6 pt-20 flex flex-col gap-3 lg:hidden shadow-2xl"
+                        >
+                            {links.map((l) => {
+                                const isActive = page === l.id;
+                                return (
+                                    <button
+                                        key={l.id}
+                                        onClick={() => { setPage(l.id); setMobileOpen(false); }}
+                                        className={`flex items-center gap-4 px-5 py-4 rounded-2xl text-left font-tech font-bold text-sm tracking-wider uppercase transition-all ${
+                                            isActive
+                                                ? `${l.color} text-[#0b1121] shadow-lg`
+                                                : 'text-slate-300 hover:bg-white/5'
+                                        }`}
+                                    >
+                                        <l.icon size={20} />
+                                        <span>{l.label}</span>
+                                    </button>
+                                );
+                            })}
+
+                            <div className="mt-auto pt-6 border-t border-white/10">
+                                {user ? (
+                                    <div className="flex items-center gap-3">
+                                        <img
+                                            src={user.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}
+                                            alt="Profile"
+                                            className="w-10 h-10 rounded-full border-2 border-teal-500/50"
+                                        />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-bold text-white truncate font-tech">{user.name || 'User'}</p>
+                                            <p className="text-[9px] text-teal-400 uppercase tracking-widest font-black font-tech">Online</p>
+                                        </div>
+                                        <button onClick={logout} className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all">
+                                            <LogOut size={16} />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={() => { loginWithGoogle(); setMobileOpen(false); }}
+                                        className="w-full py-3 rounded-full bg-teal-500 text-black text-sm font-black uppercase tracking-widest font-tech flex items-center justify-center gap-2"
+                                    >
+                                        <LogIn size={16} /> LOGIN
+                                    </button>
+                                )}
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </>
     )
 }

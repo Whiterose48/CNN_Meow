@@ -69,6 +69,9 @@ export function AnalysisProvider({ children }) {
         setHistory(prev => [entry, ...prev].slice(0, MAX_HISTORY))
     }
 
+    // Delete a single entry by id
+    const deleteEntry = (id) => setHistory(prev => prev.filter(e => e.id !== id))
+
     // Clear all history
     const clearHistory = () => setHistory([])
 
@@ -76,13 +79,6 @@ export function AnalysisProvider({ children }) {
     const stats = {
         totalDiagnostics: history.length,
         uniqueBreeds: [...new Set(history.map(h => h.breed?.breed).filter(Boolean))].length,
-        avgAccuracy: history.length > 0
-            ? Math.round(history.reduce((sum, h) => sum + (h.emotion?.confidence || 0), 0) / history.length * 100)
-            : 0,
-        alertCount: history.filter(h => {
-            const emo = (h.emotion?.label || '').toLowerCase()
-            return emo === 'angry' || emo === 'sad'
-        }).length,
     }
 
     // Emotion distribution for chart
@@ -91,6 +87,23 @@ export function AnalysisProvider({ children }) {
         acc[emo] = (acc[emo] || 0) + 1
         return acc
     }, {})
+
+    // Per-emotion average confidence
+    const emotionConfidence = (() => {
+        const sums = {}
+        const counts = {}
+        history.forEach(h => {
+            const emo = (h.emotion?.label || 'other').toLowerCase()
+            const conf = h.emotion?.confidence || 0
+            sums[emo] = (sums[emo] || 0) + conf
+            counts[emo] = (counts[emo] || 0) + 1
+        })
+        const result = {}
+        for (const emo of Object.keys(sums)) {
+            result[emo] = Math.round((sums[emo] / counts[emo]) * 100)
+        }
+        return result
+    })()
 
     // Last 7 days activity (for bar chart)
     const last7DaysActivity = (() => {
@@ -117,7 +130,7 @@ export function AnalysisProvider({ children }) {
     })()
 
     return (
-        <AnalysisContext.Provider value={{ history, addResult, clearHistory, stats, emotionCounts, last7DaysActivity }}>
+        <AnalysisContext.Provider value={{ history, addResult, deleteEntry, clearHistory, stats, emotionCounts, emotionConfidence, last7DaysActivity }}>
             {children}
         </AnalysisContext.Provider>
     )

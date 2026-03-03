@@ -8,4 +8,16 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
+  build: {
+    target: 'es2020',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          three: ['three', '@react-three/fiber', '@react-three/drei'],
+          vendor: ['react', 'react-dom', 'framer-motion'],
+        },
+      },
+    },
+  },
 })

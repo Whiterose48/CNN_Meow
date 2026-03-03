@@ -4,6 +4,7 @@ import { Float, MeshDistortMaterial, MeshWobbleMaterial, TorusKnot, Icosahedron,
 import * as THREE from 'three'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import { Brain, Code2, Database, Zap, Target, Rocket, Mail, Github, Linkedin, Cpu, Network, Boxes, Terminal, Users, CheckCircle2, ShieldCheck, Microscope } from 'lucide-react'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 // ─── 0. SUB-COMPONENT: LOOPING TYPING TEXT ───
 const LoopingTypingText = ({ text, className }) => {
@@ -80,7 +81,7 @@ const GlobalStyles = () => (
 const AICore = ({ color }) => { const ref = useRef(); useFrame((s) => (ref.current.rotation.set(s.clock.elapsedTime / 1.5, s.clock.elapsedTime / 2, 0))); return (<group> <TorusKnot ref={ref} args={[1, 0.35, 256, 64]}> <MeshDistortMaterial color={color} distort={0.6} speed={3} metalness={1} roughness={0} emissive={color} emissiveIntensity={1.2} /> </TorusKnot> <Sparkles count={150} scale={4} size={3} speed={0.4} color={color} /> </group>) }
 const FECore = ({ color }) => { const ref = useRef(); useFrame((s) => (ref.current.rotation.y = s.clock.elapsedTime / 1.2)); return (<group ref={ref}> <Dodecahedron args={[1.2, 0]}> <MeshWobbleMaterial color={color} factor={0.6} speed={3} metalness={0.9} roughness={0.1} emissive={color} emissiveIntensity={1.5} /> </Dodecahedron> <Icosahedron args={[1.8, 1]}> <meshStandardMaterial color={color} wireframe transparent opacity={0.6} /> </Icosahedron> <Sparkles count={100} scale={6} size={2} color="#fff" /> </group>) }
 const BECore = ({ color }) => { const ref = useRef(); useFrame((s) => { ref.current.rotation.y = s.clock.elapsedTime * 0.4; ref.current.children.forEach((c, i) => (c.rotation.x = s.clock.elapsedTime * (i + 1) * 0.2)) }); return (<group ref={ref}> <Box args={[1.3, 1.3, 1.3]}> <MeshDistortMaterial color={color} distort={0.3} speed={2} metalness={1} roughness={0.1} emissive={color} emissiveIntensity={1.2} /> </Box> {[1.8, 2.3].map((r, i) => (<TorusKnot key={i} args={[r, 0.03, 128, 16]}> <meshStandardMaterial color={color} emissive={color} emissiveIntensity={2} /> </TorusKnot>))} </group>) }
-const DSCore = ({ color }) => { const ref = useRef(); useFrame((s) => (ref.current.rotation.y = s.clock.elapsedTime / 3)); return (<group ref={ref}> <Sphere args={[0.8, 64, 64]}> <meshStandardMaterial color={color} emissive={color} emissiveIntensity={4} /> </Sphere> <Points positions={new Float32Array([...Array(4500)].map(() => (Math.random() - 0.5) * 6.5))} stride={3}> <PointMaterial transparent color={color} size={0.04} sizeAttenuation={true} depthWrite={false} blending={THREE.AdditiveBlending} /> </Points> </group>) }
+const DSCore = ({ color }) => { const ref = useRef(); const positions = useMemo(() => new Float32Array([...Array(4500)].map(() => (Math.random() - 0.5) * 6.5)), []); useFrame((s) => (ref.current.rotation.y = s.clock.elapsedTime / 3)); return (<group ref={ref}> <Sphere args={[0.8, 64, 64]}> <meshStandardMaterial color={color} emissive={color} emissiveIntensity={4} /> </Sphere> <Points positions={positions} stride={3}> <PointMaterial transparent color={color} size={0.04} sizeAttenuation={true} depthWrite={false} blending={THREE.AdditiveBlending} /> </Points> </group>) }
 
 // ─── 3. DATA (ห้ามแก้) ───
 const MEMBER_DATA = {
@@ -116,19 +117,21 @@ export default function Personal({ name, setPage }) {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(2,6,23,0.6)_0%,#010409_100%)]" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#010409]/60 via-transparent to-[#010409]/90 z-10" />
 
-                <Canvas shadows dpr={[1, 2]}>
-                    <PerspectiveCamera makeDefault position={[0, 0, 7]} fov={30} />
-                    <Suspense fallback={null}>
-                        <Stars radius={130} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-                        <ambientLight intensity={0.5} />
-                        <pointLight position={[10, 10, 10]} color={data.color} intensity={12} />
-                        <Float speed={3} rotationIntensity={1} floatIntensity={2}>
-                            <Core color={data.color} />
-                        </Float>
-                        <Environment preset="night" />
-                        <ContactShadows opacity={0.6} scale={20} blur={2.5} far={4.5} color={data.color} />
-                    </Suspense>
-                </Canvas>
+                <ErrorBoundary fallback={<div className="fixed inset-0 bg-[#010409]" />}>
+                    <Canvas shadows dpr={[1, 2]}>
+                        <PerspectiveCamera makeDefault position={[0, 0, 7]} fov={30} />
+                        <Suspense fallback={null}>
+                            <Stars radius={130} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+                            <ambientLight intensity={0.5} />
+                            <pointLight position={[10, 10, 10]} color={data.color} intensity={12} />
+                            <Float speed={3} rotationIntensity={1} floatIntensity={2}>
+                                <Core color={data.color} />
+                            </Float>
+                            <Environment preset="night" />
+                            <ContactShadows opacity={0.6} scale={20} blur={2.5} far={4.5} color={data.color} />
+                        </Suspense>
+                    </Canvas>
+                </ErrorBoundary>
             </div>
 
             <div className="relative z-20 max-w-5xl mx-auto px-6 pt-52">

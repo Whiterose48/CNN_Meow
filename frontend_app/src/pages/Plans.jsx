@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, Environment, Stars, Sparkles, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
 import { Check, Crown, Star, ChevronLeft, Rocket, QrCode, ShieldCheck, Cpu } from 'lucide-react'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 // ─── 1. HIGH-GLOSS 3D WEALTH ASSETS ───
 const GoldBar = ({ position, rotation }) => (
@@ -117,27 +118,29 @@ export default function Plans({ setPage, setPlan }) {
             {/* ── 3D SCENE (SOLID BLACK) ── */}
             <div className="fixed inset-0 z-0">
                 <div className="absolute inset-0 bg-[#010409]" />
-                <Canvas shadows dpr={[1, 2]}>
-                    <Suspense fallback={null}>
-                        <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={40} />
-                        <ambientLight intensity={0.8} />
-                        <pointLight position={[10, 10, 10]} intensity={3.5} color="#FFD700" />
-                        <pointLight position={[-10, -10, -10]} intensity={2} color="#ffffff" />
-                        <WealthVault />
-                        <Stars radius={100} count={3000} factor={4} fade speed={1} />
-                        <Environment preset="city" />
-                    </Suspense>
-                </Canvas>
+                <ErrorBoundary fallback={<div className="fixed inset-0 bg-[#010409]" />}>
+                    <Canvas shadows dpr={[1, 2]}>
+                        <Suspense fallback={null}>
+                            <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={40} />
+                            <ambientLight intensity={0.8} />
+                            <pointLight position={[10, 10, 10]} intensity={3.5} color="#FFD700" />
+                            <pointLight position={[-10, -10, -10]} intensity={2} color="#ffffff" />
+                            <WealthVault />
+                            <Stars radius={100} count={3000} factor={4} fade speed={1} />
+                            <Environment preset="city" />
+                        </Suspense>
+                    </Canvas>
+                </ErrorBoundary>
             </div>
 
-            <div className="relative z-10 max-w-7xl mx-auto px-6 pt-24 pb-40 font-tech">
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-40 font-tech">
 
                 {/* HEADER */}
                 <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-20 flex flex-col items-center">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 mb-6 font-tech tracking-[0.4em] text-[17px] text-teal-400 uppercase shadow-lg">
                         <Cpu size={12} className="animate-pulse" /> Neural_Network_Upgrade
                     </div>
-                    <h1 className="text-7xl md:text-8xl font-black text-white tracking-tighter mb-4 uppercase drop-shadow-2xl flex gap-4">
+                    <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter mb-4 uppercase drop-shadow-2xl flex flex-wrap justify-center gap-4">
                         CHOOSE 
                         {/* เพิ่มคลาส animate-text-glow ที่นี่ */}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-400 to-teal-300 animate-text-glow">
