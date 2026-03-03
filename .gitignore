@@ -6,9 +6,12 @@ __pycache__/
 venv/
 .venv/
 
-# ─── Environment ──────────────────────
+# ─── Environment / Secrets (สำคัญมาก!) ──
 .env
-.env.local
+.env.*
+!.env.example
+backend/.env
+frontend_app/.env
 
 # ─── Model Weights (ไฟล์ใหญ่) ────────
 weights/
