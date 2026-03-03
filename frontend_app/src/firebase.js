@@ -1,9 +1,9 @@
-// Firebase Configuration — ใช้ project จริงของทีม
+// Firebase Configuration
 import { initializeApp } from "firebase/app"
 import { getAuth, GoogleAuthProvider } from "firebase/auth"
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAL3I9sqFp6ub-sjmoI59eUbIEY6_yoLnY",
+    apiKey: "AIzaSyBHV5IZLmD8M5BTQpOTbXrKyOk4C63EA4A",
     authDomain: "mlops-auth-c08ab.firebaseapp.com",
     projectId: "mlops-auth-c08ab",
     storageBucket: "mlops-auth-c08ab.firebasestorage.app",
@@ -13,8 +13,10 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
-export const googleProvider = new GoogleAuthProvider()
-googleProvider.setCustomParameters({ prompt: 'select_account' })
+const auth = getAuth(app)
+const provider = new GoogleAuthProvider()
+provider.setCustomParameters({ prompt: 'select_account' })
+const googleProvider = provider // alias for backward compatibility
 
+export { auth, provider, googleProvider }
 export default app

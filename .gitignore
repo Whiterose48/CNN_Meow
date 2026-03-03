@@ -1,17 +1,51 @@
-# filepath: /Users/iam.pxk/Desktop/CNN_Meow/.gitignore
+# ─── Python ───────────────────────────
 __pycache__/
 *.pyc
-.env
-weights/
-uploads/
-*.pt
-*.pth
-.DS_Store
-node_modules/
-dist/
+*.pyo
+*.egg-info/
 venv/
 .venv/
+
+# ─── Environment ──────────────────────
+.env
+.env.local
+
+# ─── Model Weights (ไฟล์ใหญ่) ────────
+weights/
+*.pt
+*.pth
+
+# ─── Data / Uploads ───────────────────
+uploads/
 data/raw/
 data/processed/
+
+# ─── MLflow ───────────────────────────
+mlruns/
+mlruns.db
+mlartifacts/
+
+# ─── Experiment Tracking ─────────────
 wandb/
 runs/
+
+# ─── Frontend (Node.js) ──────────────
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# ─── OS / IDE ─────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ─── Notebook Checkpoints ────────────
+.ipynb_checkpoints/
+
+# ─── Misc ─────────────────────────────
+*.log
+training_curves.png
+confusion_matrix.png
+sample_predictions.png

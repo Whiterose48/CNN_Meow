@@ -81,7 +81,6 @@ export default function Plans({ setPage, setPlan }) {
     return (
         <div className="min-h-screen relative bg-[#010409] text-white overflow-x-hidden pb-24 font-body">
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Rajdhani:wght@500;600;700;900&display=swap');
                 .font-tech { font-family: 'Rajdhani', sans-serif; }
                 .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
                 

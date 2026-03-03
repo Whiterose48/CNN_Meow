@@ -3,14 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Points, PointMaterial, Stars, PerspectiveCamera, Grid } from '@react-three/drei'
 import * as THREE from 'three'
-import { Brain, Dog, Stethoscope, Upload, RefreshCcw, Zap, Target, Activity, ShieldAlert, Fingerprint, Info, Camera, LogIn } from 'lucide-react'
+import { Brain, Dog, Stethoscope, Upload, RefreshCcw, Zap, Target, Activity, ShieldAlert, Fingerprint, Info, Camera, LogIn, Layers } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import { useAnalysis } from '../context/AnalysisContext'
 
 // ─── 1. THREE.JS ANALYSIS BACKGROUND ───
 const DataParticles = () => {
     const points = useMemo(() => {
-        const p = new Float32Array(2000 * 3)
-        for (let i = 0; i < 2000; i++) {
+        const p = new Float32Array(800 * 3)
+        for (let i = 0; i < 800; i++) {
             p[i * 3] = (Math.random() - 0.5) * 20
             p[i * 3 + 1] = (Math.random() - 0.5) * 20
             p[i * 3 + 2] = (Math.random() - 0.5) * 10
@@ -30,13 +31,13 @@ const DataParticles = () => {
 
 const AnalysisBackground = () => (
     <div className="fixed inset-0 z-0 bg-[#010409]">
-        <Canvas dpr={[1, 2]}>
+        <Canvas dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: "high-performance" }}>
             <Suspense fallback={null}>
                 <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
                 <ambientLight intensity={0.2} />
                 <DataParticles />
                 <Grid position={[0, -4, 0]} args={[40, 40]} cellColor="#1e293b" sectionColor="#2dd4bf" sectionOpacity={0.1} cellOpacity={0.05} fadeDistance={25} />
-                <Stars radius={100} depth={50} count={1000} factor={4} fade speed={0.5} />
+                <Stars radius={100} depth={50} count={500} factor={4} fade speed={0.5} />
             </Suspense>
         </Canvas>
     </div>
@@ -63,8 +64,9 @@ function Typewriter({ text }) {
     return <span>{displayed}</span>
 }
 
-export default function Analyze({ plan, api }) {
+export default function Analyze({ plan, api, setPage }) {
     const { user, loginWithGoogle } = useAuth()
+    const { addResult } = useAnalysis()
     const [preview, setPrev] = useState(null)
     const [file, setFile] = useState(null)
     const [step, setStep] = useState(-1)
@@ -84,11 +86,12 @@ export default function Analyze({ plan, api }) {
         setStep(0);
         const fd = new FormData(); fd.append('file', file);
         try {
-            const res = await fetch(`${api}/analyze`, { method: 'POST', body: fd });
+            const res = await fetch(`${api}/analyze?plan=${plan || 'free'}`, { method: 'POST', body: fd });
             if (!res.ok) throw new Error("Neural Link Failure");
             setStep(1);
             const data = await res.json();
             setRes(data);
+            addResult(data, preview);
             setStep(3);
         } catch (err) {
             setError(err.message);
@@ -99,7 +102,6 @@ export default function Analyze({ plan, api }) {
     return (
         <div className="min-h-screen relative font-tech text-white overflow-x-hidden pb-24">
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Rajdhani:wght@500;600;700;900&display=swap');
                 .font-tech { font-family: 'Rajdhani', sans-serif; }
                 .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
                 body { background-color: #010409; }
@@ -134,7 +136,15 @@ export default function Analyze({ plan, api }) {
                     {step === -1 && (
                         <motion.div key="input" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="max-w-xl mx-auto text-center">
                             <h1 className="text-4xl md:text-5xl font-black tracking-tight uppercase mb-3 italic">NEURAL_<span className="text-teal-400">SCANNER</span></h1>
-                            <p className="text-slate-400 text-xs tracking-[0.4em] uppercase font-bold opacity-70 mb-12">Initiating Subject Data Capture</p>
+                            <p className="text-slate-400 text-xs tracking-[0.4em] uppercase font-bold opacity-70 mb-2">Initiating Subject Data Capture</p>
+                            {plan && (
+                                <span className={`inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-10 border ${plan === 'premium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-slate-500/10 text-slate-400 border-slate-500/30'}`}>
+                                    {plan === 'premium' ? '⚡ PREMIUM PLAN' : '🆓 FREE PLAN'}
+                                </span>
+                            )}
+                            {!plan && (
+                                <p className="text-slate-400 text-xs tracking-[0.4em] uppercase font-bold opacity-70 mb-10">Initiating Subject Data Capture</p>
+                            )}
 
                             {!user ? (
                                 <div className="glass-card p-16 rounded-[3rem] border border-teal-500/20 text-center shadow-2xl relative overflow-hidden">
@@ -142,8 +152,18 @@ export default function Analyze({ plan, api }) {
                                     <ShieldAlert size={50} className="text-teal-400 mx-auto mb-6 relative z-10" />
                                     <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2 relative z-10">Authentication Required</h2>
                                     <p className="text-sm font-body text-slate-400 mb-8 relative z-10">Access to the Neural Scanner is restricted. Please authenticate via Google.</p>
-                                    <button onClick={loginWithGoogle} className="relative z-10 px-8 py-4 rounded-full bg-teal-500 text-black text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)] flex items-center justify-center gap-3 mx-auto">
+                                    <button onClick={loginWithGoogle} className="relative z-10 px-8 py-4 rounded-full bg-teal-500 text-black text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)] flex items-center justify-center gap-3 mx-auto cursor-pointer">
                                         <LogIn size={16} /> Authenticate_Now
+                                    </button>
+                                </div>
+                            ) : !plan ? (
+                                <div className="glass-card p-16 rounded-[3rem] border border-amber-500/20 text-center shadow-2xl relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-amber-500/5 blur-3xl rounded-full" />
+                                    <Layers size={50} className="text-amber-400 mx-auto mb-6 relative z-10" />
+                                    <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2 relative z-10">Plan Required</h2>
+                                    <p className="text-sm font-body text-slate-400 mb-8 relative z-10">กรุณาเลือก Plan ก่อนใช้งาน Neural Scanner</p>
+                                    <button onClick={() => setPage('plans')} className="relative z-10 px-8 py-4 rounded-full bg-amber-500 text-black text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] flex items-center justify-center gap-3 mx-auto cursor-pointer">
+                                        <Layers size={16} /> Select_Plan
                                     </button>
                                 </div>
                             ) : !preview ? (
@@ -190,8 +210,16 @@ export default function Analyze({ plan, api }) {
 
                             <div className="flex justify-between items-center flex-wrap gap-6 border-b border-white/5 pb-8">
                                 <div>
-                                    <div className="badge bg-teal-500/10 text-teal-400 mb-2 border border-teal-500/20 px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Diagnostic_Final_Log</div>
-                                    <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter">Pet_Neural_Diagnostics</h1>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="badge bg-teal-500/10 text-teal-400 border border-teal-500/20 px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Diagnostic_Final_Log</div>
+                                        {result.llm_used && (
+                                            <div className="badge bg-amber-500/10 text-amber-400 border border-amber-500/20 px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">⚡ GPT-4o AI</div>
+                                        )}
+                                        {!result.llm_used && (
+                                            <div className="badge bg-slate-500/10 text-slate-400 border border-slate-500/20 px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">CNN Only</div>
+                                        )}
+                                    </div>
+                                    <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter">Animal_Neural_Diagnostics</h1>
                                 </div>
                                 <button onClick={reset} className="px-10 py-5 bg-white text-black font-black text-lg rounded-full shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:scale-105 transition-all flex items-center gap-3 group italic">
                                     <Camera size={24} className="group-hover:rotate-12 transition-transform" />
@@ -276,12 +304,39 @@ export default function Analyze({ plan, api }) {
                                                 <span className="text-[10px] font-black uppercase tracking-widest">Genomic_Data</span>
                                             </div>
                                             <h4 className="text-3xl font-black uppercase text-white leading-tight mb-2 italic tracking-tight font-tech">{result.breed?.breed || 'UNKNOWN'}</h4>
-                                            <p className="text-slate-500 uppercase tracking-[0.3em] text-[10px] font-bold mb-8">{result.breed?.species || 'DNA_SEQUENCE_N/A'}</p>
+                                            <p className="text-slate-500 uppercase tracking-[0.3em] text-[10px] font-bold mb-4">{result.breed?.species || 'DNA_SEQUENCE_N/A'}</p>
+                                            {result.breed?.traits && (
+                                                <p className="text-slate-400 text-xs font-body leading-relaxed mb-4 normal-case tracking-normal">{result.breed.traits}</p>
+                                            )}
+                                            {result.breed?.top_predictions && (
+                                                <div className="mb-6">
+                                                    <p className="text-[9px] text-slate-500 uppercase tracking-widest font-black mb-2">Top_Matches</p>
+                                                    {result.breed.top_predictions.map((pred, i) => (
+                                                        <p key={i} className="text-slate-400 text-[11px] font-body leading-relaxed normal-case tracking-normal">
+                                                            {i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'} {pred}
+                                                        </p>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            {result.breed?.imagenet_score && (
+                                                <p className="text-[10px] text-teal-400/60 uppercase font-bold tracking-wide">Score: {result.breed.imagenet_score}</p>
+                                            )}
                                         </div>
                                         <div className="bg-teal-500/10 border border-teal-500/20 p-5 rounded-[2rem] shadow-inner text-center">
                                             <span className="text-[10px] text-teal-400 font-black uppercase tracking-widest mb-1 block opacity-60">Match_Confidence</span>
-                                            <p className="text-2xl font-black text-white uppercase tracking-tighter">{result.breed?.confidence || '0%'}</p>
+                                            <p className="text-2xl font-black text-white uppercase tracking-tighter">{(() => {
+                                                const c = result.breed?.confidence || 'N/A';
+                                                if (c === 'high') return '🟢 HIGH';
+                                                if (c === 'medium') return '🟡 MEDIUM';
+                                                if (c === 'low') return '🔴 LOW';
+                                                return c;
+                                            })()}</p>
                                         </div>
+                                        {!result.llm_used && (
+                                            <button onClick={() => setPage('plans')} className="mt-4 w-full py-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all cursor-pointer">
+                                                ⚡ Upgrade for AI Breed ID
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
 
@@ -292,13 +347,22 @@ export default function Analyze({ plan, api }) {
                                         <div className="p-4 bg-teal-500/20 rounded-2xl text-teal-400 shadow-2xl border border-teal-500/20"><Stethoscope size={32} /></div>
                                         <div>
                                             <h3 className="text-xl font-bold uppercase tracking-[0.4em] italic text-white leading-none">Neural_Advisory_Output</h3>
-                                            <p className="text-[10px] text-slate-500 uppercase font-black mt-2 tracking-widest opacity-70">Protocol_v5.0 // Verified_Diagnostic_Unit</p>
+                                            <p className="text-[10px] text-slate-500 uppercase font-black mt-2 tracking-widest opacity-70">
+                                                {result.llm_used ? 'GPT-4o // LangChain Vet Agent' : 'Fallback_Mode // Upgrade for AI Advice'}
+                                            </p>
                                         </div>
                                     </div>
                                     <div className="text-slate-200 text-lg md:text-xl leading-[1.8] font-body whitespace-pre-line bg-black/40 p-8 rounded-[2.5rem] border border-white/5 shadow-[inset_0_0_50px_rgba(0,0,0,0.4)] relative z-10">
                                         <Typewriter text={result.advice || 'Extracting neural data artifacts...'} />
                                         <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="inline-block w-2 h-6 bg-teal-400 align-middle ml-2 shadow-[0_0_10px_#2dd4bf]" />
                                     </div>
+                                    {!result.llm_used && (
+                                        <div className="mt-6 text-center">
+                                            <button onClick={() => setPage('plans')} className="px-8 py-3 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all cursor-pointer">
+                                                ⚡ Upgrade to Premium for GPT-4o AI Analysis
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>

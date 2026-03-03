@@ -50,7 +50,6 @@ const LoopingTypingText = ({ text, className }) => {
 // ─── 1. GLOBAL STYLES ───
 const GlobalStyles = () => (
     <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Rajdhani:wght@500;600;700;900&display=swap');
         .font-tech { font-family: 'Rajdhani', sans-serif; }
         .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: #010409; color: #f8fafc; overflow-x: hidden; }

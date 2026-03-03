@@ -5,6 +5,7 @@ import Nav from './components/Nav'
 import Footer from './components/Footer'
 import Loading from './components/Loading' // นำเข้า Loading Component
 import { AuthProvider } from './context/AuthContext'
+import { AnalysisProvider } from './context/AnalysisContext'
 // Pages
 import Home from './pages/Home'
 import Plans from './pages/Plans'
@@ -34,6 +35,7 @@ export default function App() {
 
   return (
     <AuthProvider>
+    <AnalysisProvider>
       {/* ── Loading Screen (Overlay) ── */}
       <Loading isLoading={isLoading} />
 
@@ -72,7 +74,7 @@ export default function App() {
 
               {page === 'analyze' && (
                 <div className="pt-32 px-6 max-w-7xl mx-auto">
-                  <Analyze plan={plan} api={API} />
+                  <Analyze plan={plan} api={API} setPage={setPage} />
                 </div>
               )}
 
@@ -97,6 +99,7 @@ export default function App() {
         {page === 'home' && <Footer setPage={setPage} />}
 
       </div>
+    </AnalysisProvider>
     </AuthProvider>
   )
 }
