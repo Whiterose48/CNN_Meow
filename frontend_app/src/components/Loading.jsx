@@ -53,27 +53,27 @@ const Gyroscope = () => {
 
                 {/* Ring 1 (Inner) */}
                 <group ref={ring1}>
-                    <Torus args={[1.4, 0.05, 16, 100]}>
+                    <Torus args={[1.4, 0.05, 12, 64]}>
                         <meshStandardMaterial color="#5eead4" emissive="#2dd4bf" emissiveIntensity={1} metalness={1} roughness={0.1} />
                     </Torus>
                 </group>
 
                 {/* Ring 2 (Middle) */}
                 <group ref={ring2}>
-                    <Torus args={[1.9, 0.03, 16, 100]}>
+                    <Torus args={[1.9, 0.03, 12, 64]}>
                         <meshStandardMaterial color="#fff" emissive="#fff" emissiveIntensity={0.5} transparent opacity={0.5} />
                     </Torus>
                 </group>
 
                 {/* Ring 3 (Outer - Segmented look via logic or simple Torus for now) */}
                 <group ref={ring3}>
-                    <Torus args={[2.4, 0.08, 4, 100]} rotation={[1.5, 0, 0]}> {/* 4 segments makes it square-ish/techy */}
+                    <Torus args={[2.4, 0.08, 4, 64]} rotation={[1.5, 0, 0]}>
                         <meshStandardMaterial color="#0f766e" emissive="#115e59" emissiveIntensity={1} wireframe />
                     </Torus>
                 </group>
 
             </Float>
-            <Stars radius={50} depth={50} count={3000} factor={4} fade speed={1} />
+            <Stars radius={50} depth={50} count={1000} factor={4} fade speed={1} />
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} intensity={2} color="#2dd4bf" />
         </group>
@@ -108,7 +108,6 @@ export default function Loading({ isLoading }) {
                     className="fixed inset-0 z-[9999] bg-[#010409] flex flex-col items-center justify-center font-tech overflow-hidden"
                 >
                     <style>{`
-                        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700;900&display=swap');
                         .font-tech { font-family: 'Rajdhani', sans-serif; }
                         .scan-grid {
                             background-image: linear-gradient(rgba(45, 212, 191, 0.05) 1px, transparent 1px),
@@ -119,7 +118,7 @@ export default function Loading({ isLoading }) {
 
                     {/* 3D Layer */}
                     <div className="absolute inset-0 z-0">
-                        <Canvas dpr={[1, 2]}>
+                        <Canvas dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: "high-performance" }}>
                             <Suspense fallback={null}>
                                 <PerspectiveCamera makeDefault position={[0, 0, 7]} />
                                 <Gyroscope />

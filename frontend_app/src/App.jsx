@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 // Components
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import Loading from './components/Loading' // นำเข้า Loading Component
 import { AuthProvider } from './context/AuthContext'
+import { AnalysisProvider } from './context/AnalysisContext'
 // Pages
 import Home from './pages/Home'
 import Plans from './pages/Plans'
@@ -14,12 +14,40 @@ import Personal from './pages/Personal'
 
 const API = "http://localhost:8000"
 
+// ─── Helper: อ่าน page จาก URL hash ──────────────────────────────
+const validPages = ['home', 'plans', 'analyze', 'dashboard', 'phruk', 'poom', 'boss', 'nut']
+function getPageFromHash() {
+  const hash = window.location.hash.replace('#', '') || 'home'
+  return validPages.includes(hash) ? hash : 'home'
+}
+
 export default function App() {
-  const [page, setPage] = useState('home')
+  const [page, setPageState] = useState(getPageFromHash)
   const [plan, setPlan] = useState(null)
-  const [isLoading, setIsLoading] = useState(true) // เพิ่ม State สำหรับ Loading
+  const [isLoading, setIsLoading] = useState(true)
 
   const teamMembers = ['phruk', 'poom', 'boss', 'nut']
+
+  // ─── setPage wrapper: เปลี่ยนหน้า + push history ──────────────
+  const setPage = (newPage) => {
+    if (newPage === page) return
+    window.history.pushState({ page: newPage }, '', `#${newPage}`)
+    setPageState(newPage)
+  }
+
+  // ─── ฟัง browser back/forward (popstate) ───────────────────────
+  useEffect(() => {
+    const handlePopState = (e) => {
+      const p = e.state?.page || getPageFromHash()
+      setPageState(p)
+    }
+    window.addEventListener('popstate', handlePopState)
+
+    // ตั้ง initial state ให้ history
+    window.history.replaceState({ page: getPageFromHash() }, '', `#${getPageFromHash()}`)
+
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
 
   // จำลองการโหลดระบบ (Simulation)
   useEffect(() => {
@@ -34,6 +62,7 @@ export default function App() {
 
   return (
     <AuthProvider>
+    <AnalysisProvider>
       {/* ── Loading Screen (Overlay) ── */}
       <Loading isLoading={isLoading} />
 
@@ -54,14 +83,7 @@ export default function App() {
 
         {/* ── Main Content with Transitions ── */}
         <main className="relative z-10 min-h-screen">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={page}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.4 }}
-            >
+            <div key={page} className="page-fade-in">
               {page === 'home' && <Home setPage={setPage} />}
 
               {page === 'plans' && (
@@ -72,7 +94,7 @@ export default function App() {
 
               {page === 'analyze' && (
                 <div className="pt-32 px-6 max-w-7xl mx-auto">
-                  <Analyze plan={plan} api={API} />
+                  <Analyze plan={plan} api={API} setPage={setPage} />
                 </div>
               )}
 
@@ -89,14 +111,14 @@ export default function App() {
                   setPage={setPage}
                 />
               )}
-            </motion.div>
-          </AnimatePresence>
+            </div>
         </main>
 
         {/* ── Footer Section (Only on Home) ── */}
         {page === 'home' && <Footer setPage={setPage} />}
 
       </div>
+    </AnalysisProvider>
     </AuthProvider>
   )
 }

@@ -69,8 +69,6 @@ export default function Nav({ page, setPage }) {
     return (
         <>
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Rajdhani:wght@500;600;700;900&display=swap');
-                
                 .font-tech { font-family: 'Rajdhani', sans-serif; }
                 .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
@@ -176,7 +174,7 @@ export default function Nav({ page, setPage }) {
                                         exit={{ opacity: 0, scale: 0.9 }}
                                         className="flex items-center gap-3 pl-2"
                                     >
-                                        <div className="flex flex-col items-end text-right hidden sm:flex">
+                                        <div className="hidden sm:flex flex-col items-end text-right">
                                             <span className="text-sm font-bold text-white leading-none font-tech tracking-wide uppercase">{user.name || 'User'}</span>
                                             <span className="text-[9px] text-teal-400 uppercase tracking-widest font-black font-tech">Online</span>
                                         </div>
@@ -198,7 +196,7 @@ export default function Nav({ page, setPage }) {
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                         onClick={loginWithGoogle}
-                                        className="relative group overflow-hidden rounded-full bg-teal-500 px-6 py-2 transition-all duration-300 shadow-[0_0_20px_rgba(45,212,191,0.2)] hover:shadow-[0_0_30px_rgba(45,212,191,0.4)]"
+                                        className="relative group overflow-hidden rounded-full bg-teal-500 px-6 py-2 transition-all duration-300 cursor-pointer shadow-[0_0_20px_rgba(45,212,191,0.2)] hover:shadow-[0_0_30px_rgba(45,212,191,0.4)]"
                                     >
                                         <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-teal-300 via-white to-teal-300 opacity-0 group-hover:opacity-20 transition-opacity"></span>
                                         <div className="relative flex items-center gap-2">

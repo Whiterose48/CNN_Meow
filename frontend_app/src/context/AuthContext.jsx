@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { auth, googleProvider } from '../firebase'
+import { auth, provider } from '../firebase'
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
 
 const AuthContext = createContext(null)
@@ -8,8 +8,9 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
+    // ── Listen for Firebase auth state ──
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+        const unsub = onAuthStateChanged(auth, (firebaseUser) => {
             if (firebaseUser) {
                 setUser({
                     uid: firebaseUser.uid,
@@ -22,42 +23,39 @@ export function AuthProvider({ children }) {
             }
             setLoading(false)
         })
-        return () => unsubscribe()
+        return () => unsub()
     }, [])
 
+    // ── Google Login (popup) ──
     const loginWithGoogle = async () => {
         try {
-            const result = await signInWithPopup(auth, googleProvider)
+            console.log('[Auth] Starting Google sign-in popup...')
+            const result = await signInWithPopup(auth, provider)
+            console.log('[Auth] Success:', result.user.email)
             return result.user
-        } catch (error) {
-            console.error('Google login error:', error)
-            // ถ้า Firebase config ไม่ถูก ใช้ demo mode แทน
-            const configErrors = [
-                'auth/configuration-not-found',
-                'auth/invalid-api-key',
-                'auth/api-key-not-valid',
-                'auth/api-key-not-valid.-please-pass-a-valid-api-key.',
-            ]
-            if (configErrors.some(code => error.code?.includes(code) || error.message?.includes(code))) {
-                const demoUser = {
-                    uid: 'demo-001',
-                    name: 'Demo User',
-                    email: 'demo@petinsight360.ai',
-                    image: null,
-                }
-                setUser(demoUser)
-                return demoUser
+        } catch (err) {
+            console.error('[Auth] Login failed:', err.code, err.message)
+            
+            if (err.code === 'auth/popup-closed-by-user') {
+                console.log('[Auth] User closed popup')
+                return null
+            } else if (err.code === 'auth/popup-blocked') {
+                alert('Browser บล็อก popup\n\nกรุณาอนุญาต popup สำหรับ localhost ใน browser settings')
+            } else if (err.code === 'auth/unauthorized-domain') {
+                alert('Firebase Error: localhost ยังไม่ได้ authorize\n\nไปที่ Firebase Console → Authentication → Settings → Authorized domains → เพิ่ม localhost')
+            } else if (err.code === 'auth/configuration-not-found' || err.code === 'auth/operation-not-allowed') {
+                alert('Firebase Error: ยังไม่ได้เปิด Google Sign-in provider\n\nไปที่ Firebase Console → Authentication → Sign-in method → เปิด Google')
+            } else {
+                // Show full error for debugging
+                alert('Login Error:\nCode: ' + (err.code || 'unknown') + '\n\nMessage: ' + err.message)
             }
-            throw error
+            return null
         }
     }
 
+    // ── Logout ──
     const logout = async () => {
-        try {
-            await signOut(auth)
-        } catch {
-            // demo mode fallback
-        }
+        try { await signOut(auth) } catch { /* ignore */ }
         setUser(null)
     }
 
