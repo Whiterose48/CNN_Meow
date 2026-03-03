@@ -111,6 +111,16 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                 @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
                 .bg-animate { background-size: 200% 200%; animation: grad-flow 4s ease infinite; }
                 @keyframes grad-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+                
+                /* คลาสสำหรับทำข้อความให้มี Gradient วิ่งไปมา */
+                .animate-text-flow {
+                    background-size: 200% auto;
+                    animation: text-flow 3s linear infinite;
+                }
+                @keyframes text-flow {
+                    0% { background-position: 0% 50%; }
+                    100% { background-position: 200% 50%; }
+                }
             `}</style>
 
             <AnalysisBackground />
@@ -119,14 +129,14 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
 
                 {/* ── STEP INDICATOR ── */}
                 <div className="flex justify-center mb-12">
-                    <div className="glass-card px-10 py-3 rounded-full flex items-center gap-6 border-white/5 shadow-2xl">
+                    <div className="glass-card px-16 py-5 rounded-full flex items-center gap-6 border-white/5 shadow-2xl">
                         {[{ id: -1, l: 'INPUT' }, { id: 0, l: 'SYNC' }, { id: 1, l: 'ANALYSIS' }, { id: 3, l: 'REPORT' }].map((s, i) => (
                             <div key={i} className="flex items-center gap-6">
                                 <div className={`flex flex-col items-center transition-all ${step === s.id ? 'opacity-100 scale-105' : 'opacity-20'}`}>
-                                    <div className={`w-2 h-2 rounded-full mb-1.5 ${step >= s.id ? 'bg-teal-400 shadow-[0_0_10px_#2dd4bf]' : 'bg-white'}`} />
-                                    <span className="text-[10px] font-bold tracking-widest uppercase">{s.l}</span>
+                                    <div className={`w-4 h-4 rounded-full mb-1.5 ${step >= s.id ? 'bg-teal-400 shadow-[0_0_10px_#2dd4bf]' : 'bg-white'}`} />
+                                    <span className="text-[19px] font-bold tracking-widest uppercase">{s.l}</span>
                                 </div>
-                                {i < 3 && <div className={`w-4 h-[1px] ${step > s.id ? 'bg-teal-400/40' : 'bg-white/10'}`} />}
+                                {i < 3 && <div className={`w-10 h-[5px] ${step > s.id ? 'bg-teal-400/40' : 'bg-white/10'}`} />}
                             </div>
                         ))}
                     </div>
@@ -136,9 +146,12 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                     {/* ── PHASE: UPLOAD ── */}
                     {step === -1 && (
                         <motion.div key="input" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="max-w-xl mx-auto text-center">
-                            <h1 className="text-4xl md:text-5xl font-black tracking-tight uppercase mb-3 italic">NEURAL_<span className="text-teal-400">SCANNER</span></h1>
-                            <p className="text-slate-400 text-xs tracking-[0.4em] uppercase font-bold opacity-70 mb-2">Initiating Subject Data Capture</p>
-                            <span className={`inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-10 border ${plan === 'premium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-slate-500/10 text-slate-400 border-slate-500/30'}`}>
+                            <h1 className="text-6xl md:text-7xl font-black tracking-tight uppercase mb-3">
+                                NEURAL_
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-blue-400 to-teal-400 animate-text-flow">SCANNER</span>
+                            </h1>
+                            <p className="text-slate-400 text-xl tracking-[0.4em] uppercase font-bold opacity-70 mb-2">Initiating Subject Data Capture</p>
+                            <span className={`inline-block px-4 py-1 rounded-full text-[18px] font-black uppercase tracking-widest mb-10 border ${plan === 'premium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-slate-500/10 text-slate-400 border-slate-500/30'}`}>
                                 {plan === 'premium' ? '⚡ PREMIUM PLAN — Emotion + Breed + AI Advice' : '🆓 FREE PLAN — Emotion Analysis Only'}
                             </span>
 
@@ -157,7 +170,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                     <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => pick(e.target.files[0])} />
                                     <Upload size={44} className="text-teal-400 mx-auto mb-6 group-hover:scale-110 transition-transform" />
                                     <h2 className="text-lg font-bold uppercase tracking-widest text-slate-200">Connect Visual Signal</h2>
-                                    <p className="text-slate-500 text-[10px] uppercase mt-2">Target_Input_Awaiting</p>
+                                    <p className="text-slate-500 text-[17px] uppercase mt-2">Target_Input_Awaiting</p>
                                     {error && <p className="mt-4 text-rose-500 font-bold text-xs uppercase animate-pulse">{error}</p>}
                                 </div>
                             ) : (
@@ -167,8 +180,8 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                                     </div>
                                     <div className="flex gap-4">
-                                        <button onClick={reset} className="flex-1 py-4 rounded-2xl glass-card hover:bg-white/5 text-[11px] font-bold uppercase tracking-widest transition-all">Reject</button>
-                                        <button onClick={runAnalysis} className="flex-[2] py-4 rounded-2xl bg-teal-500 text-black text-[11px] font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(45,212,191,0.5)] transition-all">Initialize</button>
+                                        <button onClick={reset} className="flex-1 py-4 rounded-2xl glass-card hover:bg-white/5 text-[17px] font-bold uppercase tracking-widest transition-all">Reject</button>
+                                        <button onClick={runAnalysis} className="flex-[2] py-4 rounded-2xl bg-teal-500 text-black text-[17px] font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(45,212,191,0.5)] transition-all">Initialize</button>
                                     </div>
                                 </div>
                             )}
@@ -185,7 +198,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                     <Activity size={60} className="text-teal-400 opacity-20 animate-pulse" />
                                 </div>
                             </div>
-                            <h2 className="text-xl font-black uppercase tracking-widest text-teal-400 animate-pulse font-tech italic">Processing_Neural_Array...</h2>
+                            <h2 className="text-xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-400 animate-text-flow font-tech">Processing_Neural_Array...</h2>
                             <p className="text-slate-500 text-[10px] tracking-[0.5em] uppercase mt-2">Core_Synapse_Active</p>
                         </motion.div>
                     )}
@@ -197,17 +210,17 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                             <div className="flex justify-between items-center flex-wrap gap-6 border-b border-white/5 pb-8">
                                 <div>
                                     <div className="flex items-center gap-2 mb-2">
-                                        <div className="badge bg-teal-500/10 text-teal-400 border border-teal-500/20 px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">Diagnostic_Final_Log</div>
+                                        <div className="badge bg-teal-500/10 text-teal-400 border border-teal-500/20 px-4 py-1 rounded-full text-[17px] font-black tracking-widest uppercase">Diagnostic_Final_Log</div>
                                         {result.llm_used && (
-                                            <div className="badge bg-amber-500/10 text-amber-400 border border-amber-500/20 px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">⚡ GPT-4o AI</div>
+                                            <div className="badge bg-amber-500/10 text-amber-400 border border-amber-500/20 px-4 py-1 rounded-full text-[17px] font-black tracking-widest uppercase">⚡ GPT-4o AI</div>
                                         )}
                                         {!result.llm_used && (
-                                            <div className="badge bg-slate-500/10 text-slate-400 border border-slate-500/20 px-4 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">CNN Only</div>
+                                            <div className="badge bg-slate-500/10 text-slate-400 border border-slate-500/20 px-4 py-1 rounded-full text-[17px] font-black tracking-widest uppercase">CNN Only</div>
                                         )}
                                     </div>
-                                    <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter">Animal_Neural_Diagnostics</h1>
+                                    <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-teal-300 to-white animate-text-flow">Animal_Neural_Diagnostics</h1>
                                 </div>
-                                <button onClick={reset} className="px-10 py-5 bg-white text-black font-black text-lg rounded-full shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:scale-105 transition-all flex items-center gap-3 group italic">
+                                <button onClick={reset} className="px-10 py-5 bg-white text-black font-black text-lg rounded-full shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:scale-105 transition-all flex items-center gap-3 group">
                                     <Camera size={24} className="group-hover:rotate-12 transition-transform" />
                                     <span>NEW_SCAN_INITIATE</span>
                                 </button>
@@ -228,8 +241,8 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                                 <div className="absolute top-4 left-4 p-2 bg-black/80 rounded-lg text-[9px] border border-white/10 uppercase font-black tracking-widest text-teal-400 shadow-xl">Subject_Locked</div>
                                             </div>
                                             <div className="w-full grid grid-cols-2 gap-4 z-10">
-                                                <div className="bg-white/5 p-3 rounded-2xl text-center border border-white/5"><p className="text-[8px] text-slate-500 uppercase font-bold mb-1">Status</p><p className="text-xs font-black text-teal-400 uppercase tracking-widest">Verified</p></div>
-                                                <div className="bg-white/5 p-3 rounded-2xl text-center border border-white/5"><p className="text-[8px] text-slate-500 uppercase font-bold mb-1">Plan</p><p className={`text-xs font-black uppercase tracking-widest ${plan === 'premium' ? 'text-amber-400' : 'text-slate-400'}`}>{plan === 'premium' ? '⚡ PRO' : '🆓 FREE'}</p></div>
+                                                <div className="bg-white/5 p-3 rounded-2xl text-center border border-white/5"><p className="text-[15px] text-slate-500 uppercase font-bold mb-1">Status</p><p className="text-xl font-black text-teal-400 uppercase tracking-widest">Verified</p></div>
+                                                <div className="bg-white/5 p-3 rounded-2xl text-center border border-white/5"><p className="text-[15px] text-slate-500 uppercase font-bold mb-1">Plan</p><p className={`text-xl font-black uppercase tracking-widest ${plan === 'premium' ? 'text-amber-400' : 'text-slate-400'}`}>{plan === 'premium' ? '⚡ PRO' : '🆓 FREE'}</p></div>
                                             </div>
                                         </div>
                                     );
@@ -246,18 +259,18 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                                 <motion.span animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 3 }} className="text-8xl relative z-10 drop-shadow-[0_0_30px_rgba(255,255,255,0.4)] select-none">
                                                     {eCfg.emoji}
                                                 </motion.span>
-                                                <h3 className="text-4xl font-black text-white relative z-10 uppercase tracking-tighter mt-2 italic drop-shadow-lg">{eCfg.label}</h3>
+                                                <h3 className="text-4xl font-black text-white relative z-10 uppercase tracking-tighter mt-2 drop-shadow-lg">{eCfg.label}</h3>
                                             </div>
 
                                             <div className="p-8">
                                                 <div className="flex justify-between items-end mb-8 border-b border-white/5 pb-6">
                                                     <div className="border-l-4 border-teal-500/50 pl-5">
-                                                        <p className="text-[9px] text-slate-500 uppercase tracking-widest mb-1 font-black font-tech">Neural_Synapse_State</p>
-                                                        <p className="text-slate-200 text-sm font-bold italic leading-relaxed font-body">"{eCfg.desc}"</p>
+                                                        <p className="text-[17px] text-slate-500 uppercase tracking-widest mb-1 font-black font-tech">Neural_Synapse_State</p>
+                                                        <p className="text-slate-200 text-xm font-bold leading-relaxed font-body">"{eCfg.desc}"</p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className="text-4xl font-black text-teal-400 leading-none">{Math.round((result.emotion?.confidence || 0) * 100)}%</p>
-                                                        <p className="text-[9px] text-slate-500 uppercase font-black mt-1">Accuracy</p>
+                                                        <p className="text-6xl font-black text-teal-400 leading-none">{Math.round((result.emotion?.confidence || 0) * 100)}%</p>
+                                                        <p className="text-[15px] text-slate-500 uppercase font-black mt-1">Accuracy</p>
                                                     </div>
                                                 </div>
 
@@ -270,7 +283,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                                                 <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5 shadow-inner">
                                                                     <motion.div initial={{ width: 0 }} animate={{ width: score }} transition={{ duration: 1.5, ease: "circOut" }} className={`h-full bg-gradient-to-r ${cfg.grad} bg-animate`} />
                                                                 </div>
-                                                                <span className="text-[12px] font-mono w-10 text-right opacity-60 font-black">{score}</span>
+                                                                <span className="text-[17px] font-mono w-10 text-right opacity-60 font-black">{score}</span>
                                                             </div>
                                                         );
                                                     })}
@@ -290,7 +303,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                                 <Target size={18} className="animate-pulse" />
                                                 <span className="text-[10px] font-black uppercase tracking-widest">Genomic_Data</span>
                                             </div>
-                                            <h4 className="text-3xl font-black uppercase text-white leading-tight mb-2 italic tracking-tight font-tech">{result.breed?.breed || 'UNKNOWN'}</h4>
+                                            <h4 className="text-3xl font-black uppercase text-white leading-tight mb-2 tracking-tight font-tech">{result.breed?.breed || 'UNKNOWN'}</h4>
                                             <p className="text-slate-500 uppercase tracking-[0.3em] text-[10px] font-bold mb-4">{result.breed?.species || 'DNA_SEQUENCE_N/A'}</p>
                                             {result.breed?.traits && (
                                                 <p className="text-slate-400 text-xs font-body leading-relaxed mb-4 normal-case tracking-normal">{result.breed.traits}</p>
@@ -329,19 +342,20 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                     <div className="flex items-center gap-5 mb-8">
                                         <div className="p-4 bg-teal-500/20 rounded-2xl text-teal-400 shadow-2xl border border-teal-500/20"><Stethoscope size={32} /></div>
                                         <div>
-                                            <h3 className="text-xl font-bold uppercase tracking-[0.4em] italic text-white leading-none">Neural_Advisory_Output</h3>
-                                            <p className="text-[10px] text-slate-500 uppercase font-black mt-2 tracking-widest opacity-70">
+                                            <h3 className="text-xl font-bold uppercase tracking-[0.4em] text-white leading-none">Neural_Advisory_Output</h3>
+                                            <p className="text-[17px] text-slate-500 uppercase font-black mt-2 tracking-widest opacity-70">
                                                 {plan === 'premium' ? 'GPT-4o // LangChain Vet Agent' : 'Fallback_Mode // CNN Basic Advice'}
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="text-slate-200 text-lg md:text-xl leading-[1.8] font-body whitespace-pre-line bg-black/40 p-8 rounded-[2.5rem] border border-white/5 shadow-[inset_0_0_50px_rgba(0,0,0,0.4)] relative z-10">
+                                    {/* ปรับให้ text ในส่วนคำแนะนำเล็กลง (text-sm md:text-base) */}
+                                    <div className="text-slate-200 text-sm md:text-base leading-[1.8] font-body whitespace-pre-line bg-black/40 p-8 rounded-[2.5rem] border border-white/5 shadow-[inset_0_0_50px_rgba(0,0,0,0.4)] relative z-10">
                                         <Typewriter text={result.advice || 'Extracting neural data artifacts...'} />
-                                        <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="inline-block w-2 h-6 bg-teal-400 align-middle ml-2 shadow-[0_0_10px_#2dd4bf]" />
+                                        <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="inline-block w-2 h-5 bg-teal-400 align-middle ml-2 shadow-[0_0_10px_#2dd4bf]" />
                                     </div>
                                     {plan !== 'premium' && (
                                         <div className="mt-6 text-center">
-                                            <button onClick={() => setPage('plans')} className="px-8 py-3 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all cursor-pointer">
+                                            <button onClick={() => setPage('plans')} className="px-8 py-3 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xm font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all cursor-pointer">
                                                 ⚡ อัพเกรดเป็น Premium เพื่อรับคำวิเคราะห์จาก GPT-4o + ระบุสายพันธุ์
                                             </button>
                                         </div>
@@ -351,11 +365,6 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </div>
-
-            <div className="mt-24 text-center opacity-10 flex flex-col items-center gap-4 font-tech tracking-[1.5em] text-[10px] text-white pb-12 uppercase">
-                <div className="w-px h-16 bg-gradient-to-b from-white/60 to-transparent" />
-                Auth_Ledger_PetInsight_2026
             </div>
         </div>
     )
