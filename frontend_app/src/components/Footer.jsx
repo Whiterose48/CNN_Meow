@@ -13,7 +13,7 @@ export default function Footer({ setPage }) {
     return (
         <footer className="relative z-20 mt-32 pb-12 px-4 md:px-6 overflow-hidden">
             {/* CSS สำหรับ Animation ไฟวิ่งเฉพาะส่วนนี้ */}
-            <style jsx>{`
+            <style>{`
                 @keyframes spin-slow {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
@@ -69,7 +69,7 @@ export default function Footer({ setPage }) {
                                 <span className="w-12 h-[6px] bg-teal-500/50 inline-block" />
                                 Core Development Unit
                             </h3>
-                            <div className="grid grid-cols-2 gap-4 md:gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                                 {members.map((m) => (
                                     <motion.button
                                         key={m.id}

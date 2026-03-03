@@ -6,6 +6,7 @@ import * as THREE from 'three'
 import { Brain, Dog, Stethoscope, Upload, RefreshCcw, Zap, Target, Activity, ShieldAlert, Fingerprint, Info, Camera, LogIn, Layers } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useAnalysis } from '../context/AnalysisContext'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 // ─── 1. THREE.JS ANALYSIS BACKGROUND ───
 const DataParticles = () => {
@@ -19,7 +20,7 @@ const DataParticles = () => {
         return p
     }, [])
     const ref = useRef()
-    useFrame((state) => { ref.current.rotation.y = state.clock.getElapsedTime() * 0.05 })
+    useFrame((state) => { if (ref.current) ref.current.rotation.y = state.clock.getElapsedTime() * 0.05 })
     return (
         <group ref={ref}>
             <Points positions={points}>
@@ -31,15 +32,17 @@ const DataParticles = () => {
 
 const AnalysisBackground = () => (
     <div className="fixed inset-0 z-0 bg-[#010409]">
-        <Canvas dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: "high-performance" }}>
-            <Suspense fallback={null}>
-                <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
-                <ambientLight intensity={0.2} />
-                <DataParticles />
-                <Grid position={[0, -4, 0]} args={[40, 40]} cellColor="#1e293b" sectionColor="#2dd4bf" sectionOpacity={0.1} cellOpacity={0.05} fadeDistance={25} />
-                <Stars radius={100} depth={50} count={500} factor={4} fade speed={0.5} />
-            </Suspense>
-        </Canvas>
+        <ErrorBoundary fallback={<div className="fixed inset-0 bg-[#010409]" />}>
+            <Canvas dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: "high-performance" }}>
+                <Suspense fallback={null}>
+                    <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
+                    <ambientLight intensity={0.2} />
+                    <DataParticles />
+                    <Grid position={[0, -4, 0]} args={[40, 40]} cellColor="#1e293b" sectionColor="#2dd4bf" sectionOpacity={0.1} cellOpacity={0.05} fadeDistance={25} />
+                    <Stars radius={100} depth={50} count={500} factor={4} fade speed={0.5} />
+                </Suspense>
+            </Canvas>
+        </ErrorBoundary>
     </div>
 )
 
@@ -125,16 +128,16 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
 
             <AnalysisBackground />
 
-            <div className="relative z-10 max-w-6xl mx-auto px-6 pt-24 font-tech">
+            <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-20 sm:pt-24 font-tech">
 
                 {/* ── STEP INDICATOR ── */}
-                <div className="flex justify-center mb-12">
-                    <div className="glass-card px-16 py-5 rounded-full flex items-center gap-6 border-white/5 shadow-2xl">
+                <div className="flex justify-center mb-8 sm:mb-12 overflow-x-auto">
+                    <div className="glass-card px-4 sm:px-8 md:px-16 py-3 sm:py-5 rounded-full flex items-center gap-2 sm:gap-4 md:gap-6 border-white/5 shadow-2xl">
                         {[{ id: -1, l: 'INPUT' }, { id: 0, l: 'SYNC' }, { id: 1, l: 'ANALYSIS' }, { id: 3, l: 'REPORT' }].map((s, i) => (
                             <div key={i} className="flex items-center gap-6">
                                 <div className={`flex flex-col items-center transition-all ${step === s.id ? 'opacity-100 scale-105' : 'opacity-20'}`}>
-                                    <div className={`w-4 h-4 rounded-full mb-1.5 ${step >= s.id ? 'bg-teal-400 shadow-[0_0_10px_#2dd4bf]' : 'bg-white'}`} />
-                                    <span className="text-[19px] font-bold tracking-widest uppercase">{s.l}</span>
+                                    <div className={`w-3 sm:w-4 h-3 sm:h-4 rounded-full mb-1 sm:mb-1.5 ${step >= s.id ? 'bg-teal-400 shadow-[0_0_10px_#2dd4bf]' : 'bg-white'}`} />
+                                    <span className="text-xs sm:text-sm md:text-[19px] font-bold tracking-wider sm:tracking-widest uppercase">{s.l}</span>
                                 </div>
                                 {i < 3 && <div className={`w-10 h-[5px] ${step > s.id ? 'bg-teal-400/40' : 'bg-white/10'}`} />}
                             </div>
@@ -146,7 +149,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                     {/* ── PHASE: UPLOAD ── */}
                     {step === -1 && (
                         <motion.div key="input" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="max-w-xl mx-auto text-center">
-                            <h1 className="text-6xl md:text-7xl font-black tracking-tight uppercase mb-3">
+                            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight uppercase mb-3">
                                 NEURAL_
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-blue-400 to-teal-400 animate-text-flow">SCANNER</span>
                             </h1>
@@ -266,7 +269,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                                 <div className="flex justify-between items-end mb-8 border-b border-white/5 pb-6">
                                                     <div className="border-l-4 border-teal-500/50 pl-5">
                                                         <p className="text-[17px] text-slate-500 uppercase tracking-widest mb-1 font-black font-tech">Neural_Synapse_State</p>
-                                                        <p className="text-slate-200 text-xm font-bold leading-relaxed font-body">"{eCfg.desc}"</p>
+                                                        <p className="text-slate-200 text-sm font-bold leading-relaxed font-body">"{eCfg.desc}"</p>
                                                     </div>
                                                     <div className="text-right">
                                                         <p className="text-6xl font-black text-teal-400 leading-none">{Math.round((result.emotion?.confidence || 0) * 100)}%</p>
@@ -281,7 +284,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                                             <div key={key} className="flex items-center gap-5 group">
                                                                 <span className="text-3xl w-10 text-center transition-transform group-hover:scale-125">{cfg.emoji}</span>
                                                                 <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5 shadow-inner">
-                                                                    <motion.div initial={{ width: 0 }} animate={{ width: score }} transition={{ duration: 1.5, ease: "circOut" }} className={`h-full bg-gradient-to-r ${cfg.grad} bg-animate`} />
+                                                                    <motion.div initial={{ width: 0 }} animate={{ width: typeof score === 'number' ? `${Math.round(score * 100)}%` : score }} transition={{ duration: 1.5, ease: "circOut" }} className={`h-full bg-gradient-to-r ${cfg.grad} bg-animate`} />
                                                                 </div>
                                                                 <span className="text-[17px] font-mono w-10 text-right opacity-60 font-black">{score}</span>
                                                             </div>
@@ -355,7 +358,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                     </div>
                                     {plan !== 'premium' && (
                                         <div className="mt-6 text-center">
-                                            <button onClick={() => setPage('plans')} className="px-8 py-3 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xm font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all cursor-pointer">
+                                            <button onClick={() => setPage('plans')} className="px-4 sm:px-8 py-3 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-sm font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all cursor-pointer">
                                                 ⚡ อัพเกรดเป็น Premium เพื่อรับคำวิเคราะห์จาก GPT-4o + ระบุสายพันธุ์
                                             </button>
                                         </div>

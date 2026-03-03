@@ -12,7 +12,7 @@ import Analyze from './pages/Analyze'
 import Dashboard from './pages/Dashboard'
 import Personal from './pages/Personal'
 
-const API = "http://localhost:8000"
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000"
 
 // ─── Helper: อ่าน page จาก URL hash ──────────────────────────────
 const validPages = ['home', 'plans', 'analyze', 'dashboard', 'phruk', 'poom', 'boss', 'nut']
@@ -98,11 +98,7 @@ export default function App() {
                 </div>
               )}
 
-              {page === 'dashboard' && (
-                <div className="pt-32 px-6 max-w-7xl mx-auto">
-                  <Dashboard />
-                </div>
-              )}
+              {page === 'dashboard' && <Dashboard />}
 
               {/* ── Personal Pages Dynamic Route ── */}
               {teamMembers.includes(page) && (
