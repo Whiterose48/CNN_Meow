@@ -163,3 +163,12 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-sage);
 }
+
+/* ── Page Transition Fade-in ── */
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.page-fade-in {
+  animation: pageFadeIn 0.3s ease-out both;
+}

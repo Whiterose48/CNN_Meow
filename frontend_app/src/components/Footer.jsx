@@ -13,7 +13,7 @@ export default function Footer({ setPage }) {
     return (
         <footer className="relative z-20 mt-32 pb-12 px-4 md:px-6 overflow-hidden">
             {/* CSS สำหรับ Animation ไฟวิ่งเฉพาะส่วนนี้ */}
-            <style>{`
+            <style jsx>{`
                 @keyframes spin-slow {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
