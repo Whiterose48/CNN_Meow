@@ -64,7 +64,8 @@ function Typewriter({ text }) {
     return <span>{displayed}</span>
 }
 
-export default function Analyze({ plan, api, setPage }) {
+export default function Analyze({ plan: rawPlan, api, setPage }) {
+    const plan = rawPlan || 'free'
     const { user, loginWithGoogle } = useAuth()
     const { addResult } = useAnalysis()
     const [preview, setPrev] = useState(null)
@@ -137,14 +138,9 @@ export default function Analyze({ plan, api, setPage }) {
                         <motion.div key="input" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="max-w-xl mx-auto text-center">
                             <h1 className="text-4xl md:text-5xl font-black tracking-tight uppercase mb-3 italic">NEURAL_<span className="text-teal-400">SCANNER</span></h1>
                             <p className="text-slate-400 text-xs tracking-[0.4em] uppercase font-bold opacity-70 mb-2">Initiating Subject Data Capture</p>
-                            {plan && (
-                                <span className={`inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-10 border ${plan === 'premium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-slate-500/10 text-slate-400 border-slate-500/30'}`}>
-                                    {plan === 'premium' ? '⚡ PREMIUM PLAN' : '🆓 FREE PLAN'}
-                                </span>
-                            )}
-                            {!plan && (
-                                <p className="text-slate-400 text-xs tracking-[0.4em] uppercase font-bold opacity-70 mb-10">Initiating Subject Data Capture</p>
-                            )}
+                            <span className={`inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-10 border ${plan === 'premium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-slate-500/10 text-slate-400 border-slate-500/30'}`}>
+                                {plan === 'premium' ? '⚡ PREMIUM PLAN — Emotion + Breed + AI Advice' : '🆓 FREE PLAN — Emotion Analysis Only'}
+                            </span>
 
                             {!user ? (
                                 <div className="glass-card p-16 rounded-[3rem] border border-teal-500/20 text-center shadow-2xl relative overflow-hidden">
@@ -154,16 +150,6 @@ export default function Analyze({ plan, api, setPage }) {
                                     <p className="text-sm font-body text-slate-400 mb-8 relative z-10">Access to the Neural Scanner is restricted. Please authenticate via Google.</p>
                                     <button onClick={loginWithGoogle} className="relative z-10 px-8 py-4 rounded-full bg-teal-500 text-black text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)] flex items-center justify-center gap-3 mx-auto cursor-pointer">
                                         <LogIn size={16} /> Authenticate_Now
-                                    </button>
-                                </div>
-                            ) : !plan ? (
-                                <div className="glass-card p-16 rounded-[3rem] border border-amber-500/20 text-center shadow-2xl relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-amber-500/5 blur-3xl rounded-full" />
-                                    <Layers size={50} className="text-amber-400 mx-auto mb-6 relative z-10" />
-                                    <h2 className="text-xl font-black uppercase tracking-widest text-white mb-2 relative z-10">Plan Required</h2>
-                                    <p className="text-sm font-body text-slate-400 mb-8 relative z-10">กรุณาเลือก Plan ก่อนใช้งาน Neural Scanner</p>
-                                    <button onClick={() => setPage('plans')} className="relative z-10 px-8 py-4 rounded-full bg-amber-500 text-black text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(245,158,11,0.3)] flex items-center justify-center gap-3 mx-auto cursor-pointer">
-                                        <Layers size={16} /> Select_Plan
                                     </button>
                                 </div>
                             ) : !preview ? (
@@ -227,14 +213,14 @@ export default function Analyze({ plan, api, setPage }) {
                                 </button>
                             </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                            <div className={`grid grid-cols-1 ${plan === 'premium' ? 'lg:grid-cols-12' : 'lg:grid-cols-2'} gap-6 items-stretch`}>
 
                                 {/* 1. Visual Capture Cell (WITH EMOTION COLOR) */}
                                 {(() => {
                                     const eLabel = (result.emotion?.label || 'other').toLowerCase();
                                     const eCfg = EMO_MAP[eLabel] || EMO_MAP.other;
                                     return (
-                                        <div className="lg:col-span-4 glass-card p-6 rounded-[3rem] flex flex-col items-center border-white/5 shadow-2xl relative overflow-hidden">
+                                        <div className={`${plan === 'premium' ? 'lg:col-span-4' : ''} glass-card p-6 rounded-[3rem] flex flex-col items-center border-white/5 shadow-2xl relative overflow-hidden`}>
                                             {/* Emotion-Based Inner Glow */}
                                             <div className={`absolute inset-0 bg-gradient-to-br ${eCfg.grad} opacity-5 blur-[80px] pointer-events-none`} />
                                             <div className="relative w-full rounded-2xl overflow-hidden border border-white/10 mb-6 group z-10 shadow-2xl">
@@ -243,7 +229,7 @@ export default function Analyze({ plan, api, setPage }) {
                                             </div>
                                             <div className="w-full grid grid-cols-2 gap-4 z-10">
                                                 <div className="bg-white/5 p-3 rounded-2xl text-center border border-white/5"><p className="text-[8px] text-slate-500 uppercase font-bold mb-1">Status</p><p className="text-xs font-black text-teal-400 uppercase tracking-widest">Verified</p></div>
-                                                <div className="bg-white/5 p-3 rounded-2xl text-center border border-white/5"><p className="text-[8px] text-slate-500 uppercase font-bold mb-1">ID</p><p className="text-xs font-black text-teal-400 uppercase tracking-widest">V-2026</p></div>
+                                                <div className="bg-white/5 p-3 rounded-2xl text-center border border-white/5"><p className="text-[8px] text-slate-500 uppercase font-bold mb-1">Plan</p><p className={`text-xs font-black uppercase tracking-widest ${plan === 'premium' ? 'text-amber-400' : 'text-slate-400'}`}>{plan === 'premium' ? '⚡ PRO' : '🆓 FREE'}</p></div>
                                             </div>
                                         </div>
                                     );
@@ -254,7 +240,7 @@ export default function Analyze({ plan, api, setPage }) {
                                     const eLabel = (result.emotion?.label || 'other').toLowerCase();
                                     const eCfg = EMO_MAP[eLabel] || EMO_MAP.other;
                                     return (
-                                        <div className={`lg:col-span-5 glass-card rounded-[3rem] overflow-hidden border-t-8 shadow-2xl`} style={{ borderTopColor: eCfg.color }}>
+                                        <div className={`${plan === 'premium' ? 'lg:col-span-5' : ''} glass-card rounded-[3rem] overflow-hidden border-t-8 shadow-2xl`} style={{ borderTopColor: eCfg.color }}>
                                             <div className={`h-48 w-full bg-gradient-to-br ${eCfg.grad} bg-animate flex flex-col items-center justify-center relative`}>
                                                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
                                                 <motion.span animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 3 }} className="text-8xl relative z-10 drop-shadow-[0_0_30px_rgba(255,255,255,0.4)] select-none">
@@ -294,7 +280,8 @@ export default function Analyze({ plan, api, setPage }) {
                                     );
                                 })()}
 
-                                {/* 3. Genomic Signature Box */}
+                                {/* 3. Genomic Signature Box (PREMIUM ONLY) */}
+                                {plan === 'premium' && (
                                 <div className="lg:col-span-3 glass-card p-8 rounded-[3rem] border-white/5 relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity rotate-12 pointer-events-none"><Fingerprint size={120} /></div>
                                     <div className="relative z-10 flex flex-col h-full justify-between">
@@ -332,23 +319,19 @@ export default function Analyze({ plan, api, setPage }) {
                                                 return c;
                                             })()}</p>
                                         </div>
-                                        {!result.llm_used && (
-                                            <button onClick={() => setPage('plans')} className="mt-4 w-full py-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all cursor-pointer">
-                                                ⚡ Upgrade for AI Breed ID
-                                            </button>
-                                        )}
                                     </div>
                                 </div>
+                                )}
 
-                                {/* 4. Advisory Terminal (BALANCED TEXT) */}
-                                <div className="lg:col-span-12 glass-card p-10 md:p-12 rounded-[4rem] border-l-[12px] border-l-teal-500 relative overflow-hidden bg-gradient-to-br from-teal-500/[0.04] to-transparent shadow-2xl">
+                                {/* 4. Advisory Terminal (PREMIUM = GPT-4o / FREE = fallback advice) */}
+                                <div className={`${plan === 'premium' ? 'lg:col-span-12' : 'lg:col-span-2'} glass-card p-10 md:p-12 rounded-[4rem] border-l-[12px] border-l-teal-500 relative overflow-hidden bg-gradient-to-br from-teal-500/[0.04] to-transparent shadow-2xl`}>
                                     <div className="absolute -top-10 -right-10 p-12 opacity-5 text-white pointer-events-none rotate-12"><ShieldAlert size={180} /></div>
                                     <div className="flex items-center gap-5 mb-8">
                                         <div className="p-4 bg-teal-500/20 rounded-2xl text-teal-400 shadow-2xl border border-teal-500/20"><Stethoscope size={32} /></div>
                                         <div>
                                             <h3 className="text-xl font-bold uppercase tracking-[0.4em] italic text-white leading-none">Neural_Advisory_Output</h3>
                                             <p className="text-[10px] text-slate-500 uppercase font-black mt-2 tracking-widest opacity-70">
-                                                {result.llm_used ? 'GPT-4o // LangChain Vet Agent' : 'Fallback_Mode // Upgrade for AI Advice'}
+                                                {plan === 'premium' ? 'GPT-4o // LangChain Vet Agent' : 'Fallback_Mode // CNN Basic Advice'}
                                             </p>
                                         </div>
                                     </div>
@@ -356,10 +339,10 @@ export default function Analyze({ plan, api, setPage }) {
                                         <Typewriter text={result.advice || 'Extracting neural data artifacts...'} />
                                         <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 0.8 }} className="inline-block w-2 h-6 bg-teal-400 align-middle ml-2 shadow-[0_0_10px_#2dd4bf]" />
                                     </div>
-                                    {!result.llm_used && (
+                                    {plan !== 'premium' && (
                                         <div className="mt-6 text-center">
                                             <button onClick={() => setPage('plans')} className="px-8 py-3 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-black uppercase tracking-widest hover:bg-amber-500/20 transition-all cursor-pointer">
-                                                ⚡ Upgrade to Premium for GPT-4o AI Analysis
+                                                ⚡ อัพเกรดเป็น Premium เพื่อรับคำวิเคราะห์จาก GPT-4o + ระบุสายพันธุ์
                                             </button>
                                         </div>
                                     )}

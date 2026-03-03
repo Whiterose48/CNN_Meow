@@ -56,8 +56,8 @@ const WealthVault = () => {
 
 // ─── 2. DATA (2 PLANS) ───
 const PLANS = [
-    { id: 'free', name: 'Essential', sub: 'FREE_ACCESS', price: '0', icon: Rocket, color: '#94A3B8', features: ['Basic Emotion Detection', 'Generic Breed ID', 'Standard Care Advice', 'Public Neural Logic'], target: 'Standard Unit' },
-    { id: 'premium', name: 'Pro Parent', sub: 'PREMIUM_CORE', price: '299', icon: Crown, color: '#FFD700', popular: true, features: ['Deep Neural Emotion Scan', 'Advanced Zero-shot Breed ID', 'Specific Medical AI Guidance', '30-Day History Sync', 'Priority AI Agent 24/7'], target: 'Elite Unit' },
+    { id: 'free', name: 'Essential', sub: 'FREE_ACCESS', price: '0', icon: Rocket, color: '#94A3B8', features: ['วิเคราะห์อารมณ์สัตว์เลี้ยง (CNN Emotion)', 'แสดงผลอารมณ์ + ค่าความมั่นใจ', 'คำแนะนำเบื้องต้นจากระบบ Fallback', 'ไม่จำกัดจำนวนการสแกน'], target: 'Standard Unit' },
+    { id: 'premium', name: 'Pro Parent', sub: 'PREMIUM_CORE', price: '299', icon: Crown, color: '#FFD700', popular: true, features: ['วิเคราะห์อารมณ์แบบ Deep Neural Scan', 'ระบุสายพันธุ์ด้วย ImageNet AI (150+ สายพันธุ์)', 'คำแนะนำสัตวแพทย์โดย GPT-4o + LangChain', 'บันทึกประวัติ 30 วัน (Dashboard Sync)', 'AI Agent ให้คำปรึกษา 24/7'], target: 'Elite Unit' },
 ]
 
 export default function Plans({ setPage, setPlan }) {
@@ -87,13 +87,30 @@ export default function Plans({ setPage, setPlan }) {
                 .glass-card { background: rgba(10, 15, 30, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
                 @keyframes glow-run { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
                 
+                /* เอฟเฟกต์ไฟวิ่งของตัวอักษร Plan */
+                .animate-text-glow {
+                    background-size: 200% auto;
+                    animation: glow-run 3s linear infinite;
+                }
+                
+                /* ขอบไฟวิ่งของ Premium Plan (สีทอง) */
                 .premium-border { position: relative; }
                 .premium-border::after {
                     content: ""; position: absolute; inset: -2.5px; border-radius: 3.1rem; padding: 2.5px;
                     background: linear-gradient(90deg, transparent, #FFD700, #fff, #FFD700, transparent);
                     background-size: 200% auto; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
                     -webkit-mask-composite: xor; mask-composite: exclude; animation: glow-run 4s linear infinite;
-                    pointer-events: none; /* กันขอบบังปุ่ม */
+                    pointer-events: none;
+                }
+
+                /* ขอบไฟวิ่งของ Free Plan (สีฟ้า/เงิน) */
+                .free-border { position: relative; }
+                .free-border::after {
+                    content: ""; position: absolute; inset: -2.5px; border-radius: 3.1rem; padding: 2.5px;
+                    background: linear-gradient(90deg, transparent, #38bdf8, #fff, #38bdf8, transparent);
+                    background-size: 200% auto; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                    -webkit-mask-composite: xor; mask-composite: exclude; animation: glow-run 4s linear infinite reverse;
+                    pointer-events: none;
                 }
             `}</style>
 
@@ -115,13 +132,17 @@ export default function Plans({ setPage, setPlan }) {
 
             <div className="relative z-10 max-w-7xl mx-auto px-6 pt-24 pb-40 font-tech">
 
-                {/* HEADER - REFINED SIZE */}
-                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-20">
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 mb-6 font-tech tracking-[0.4em] text-[9px] text-teal-400 uppercase shadow-lg">
+                {/* HEADER */}
+                <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-20 flex flex-col items-center">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 mb-6 font-tech tracking-[0.4em] text-[17px] text-teal-400 uppercase shadow-lg">
                         <Cpu size={12} className="animate-pulse" /> Neural_Network_Upgrade
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4 uppercase drop-shadow-2xl">
-                        CHOOSE <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-400 to-teal-300">Plan</span>
+                    <h1 className="text-7xl md:text-8xl font-black text-white tracking-tighter mb-4 uppercase drop-shadow-2xl flex gap-4">
+                        CHOOSE 
+                        {/* เพิ่มคลาส animate-text-glow ที่นี่ */}
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-400 to-teal-300 animate-text-glow">
+                            Plan
+                        </span>
                     </h1>
                     <p className="text-white/70 text-base max-w-lg mx-auto font-body font-light leading-relaxed drop-shadow-md">
                         Activate premium neural links for advanced veterinary analysis.
@@ -136,8 +157,11 @@ export default function Plans({ setPage, setPlan }) {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             whileHover={{ y: -10, scale: 1.01 }}
+                            // เพิ่มเงื่อนไขให้ Free Plan แสดงขอบวิ่งแบบ free-border พร้อมแสง glow สีฟ้าจางๆ
                             className={`glass-card p-8 md:p-10 rounded-[3rem] flex flex-col h-full transition-all duration-500 
-                                ${p.popular ? 'premium-border shadow-[0_0_60px_rgba(255,215,0,0.15)]' : 'shadow-2xl'}`}
+                                ${p.id === 'premium' 
+                                    ? 'premium-border shadow-[0_0_60px_rgba(255,215,0,0.15)]' 
+                                    : 'free-border shadow-[0_0_60px_rgba(56,189,248,0.12)]'}`}
                         >
                             <div className="mb-8 flex-shrink-0">
                                 <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-6 border border-white/20 shadow-xl">
@@ -223,12 +247,6 @@ export default function Plans({ setPage, setPlan }) {
                     </motion.div>
                 )}
             </AnimatePresence>
-
-            {/* Micro-footer */}
-            <div className="mt-20 text-center opacity-20 flex flex-col items-center gap-4 font-tech tracking-[1.5em] text-[9px] text-white pb-10 uppercase relative z-10">
-                <div className="w-px h-16 bg-gradient-to-b from-white/40 to-transparent" />
-                PETINSIGHT_VAULT_2026
-            </div>
         </div>
     )
 }
