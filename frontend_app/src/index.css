@@ -15,8 +15,8 @@
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-charcoal);
+  background: #010409;
+  color: #f8fafc;
   font-family: var(--font-sans);
   margin: 0;
   overflow-x: hidden;
@@ -152,16 +152,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-cream);
+  background: #010409;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: #1e293b;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-sage);
+  background: #2dd4bf;
 }
 
 /* ── Page Transition Fade-in ── */
