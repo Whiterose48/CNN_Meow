@@ -124,7 +124,6 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                     100% { background-position: 200% 50%; }
                 }
 
-                /* ซ่อน Scrollbar สำหรับตัว Step Indicator บนมือถือ */
                 .no-scrollbar::-webkit-scrollbar { display: none; }
                 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
@@ -133,7 +132,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
 
             <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-24 font-tech">
 
-                {/* ── STEP INDICATOR (แก้ไขให้ Responsive) ── */}
+                {/* ── STEP INDICATOR ── */}
                 <div className="flex justify-center mb-8 md:mb-12 w-full px-2">
                     <div className="glass-card px-4 sm:px-8 md:px-16 py-3 md:py-5 rounded-full flex items-center gap-2 sm:gap-4 md:gap-6 border-white/5 shadow-2xl overflow-x-auto no-scrollbar max-w-full">
                         {[{ id: -1, l: 'INPUT' }, { id: 0, l: 'SYNC' }, { id: 1, l: 'ANALYSIS' }, { id: 3, l: 'REPORT' }].map((s, i) => (
@@ -210,7 +209,7 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                         </motion.div>
                     )}
 
-                    {/* ── PHASE: REPORT (SYMMETRICAL & COLORED) ── */}
+                    {/* ── PHASE: REPORT ── */}
                     {step === 3 && result && (
                         <motion.div key="report" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 md:space-y-8 font-tech w-full">
 
@@ -233,40 +232,53 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                 </button>
                             </div>
 
-                            <div className={`grid grid-cols-1 ${plan === 'premium' ? 'lg:grid-cols-12' : 'lg:grid-cols-2'} gap-6 items-stretch w-full`}>
+                            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full">
 
-                                {/* 1. Visual Capture Cell (WITH EMOTION COLOR) */}
+                                {/* 1. Visual Capture Cell (left 4 cols) */}
                                 {(() => {
                                     const eLabel = (result.emotion?.label || 'other').toLowerCase();
                                     const eCfg = EMO_MAP[eLabel] || EMO_MAP.other;
                                     return (
-                                        <div className={`${plan === 'premium' ? 'lg:col-span-4' : 'lg:col-span-1'} glass-card p-4 sm:p-6 rounded-[2rem] md:rounded-[3rem] flex flex-col items-center border-white/5 shadow-2xl relative overflow-hidden h-full w-full`}>
-                                            {/* Emotion-Based Inner Glow */}
+                                        <div className="lg:col-span-4 glass-card rounded-[2rem] md:rounded-[3rem] flex flex-col border-white/5 shadow-2xl relative overflow-hidden w-full">
                                             <div className={`absolute inset-0 bg-gradient-to-br ${eCfg.grad} opacity-5 blur-[80px] pointer-events-none`} />
-                                            <div className="relative w-full max-w-sm md:max-w-md mx-auto aspect-[4/5] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-white/10 mb-4 md:mb-6 group z-10 shadow-2xl">
+                                            {/* Image with fixed aspect ratio — no empty space */}
+                                            <div className="relative w-full overflow-hidden rounded-t-[2rem] md:rounded-t-[3rem] z-10" style={{ aspectRatio: '4/4.2' }}>
                                                 <img src={preview} className="absolute inset-0 w-full h-full object-cover" alt="Captured Subject" />
                                                 <div className="absolute top-3 left-3 md:top-4 md:left-4 p-1.5 md:p-2 bg-black/80 rounded-lg text-[8px] md:text-[9px] border border-white/10 uppercase font-black tracking-widest text-teal-400 shadow-xl">Subject_Locked</div>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
                                             </div>
-                                            <div className="w-full grid grid-cols-2 gap-3 md:gap-4 z-10 mt-auto shrink-0">
-                                                <div className="bg-white/5 p-3 md:p-4 rounded-xl md:rounded-2xl text-center border border-white/5"><p className="text-[10px] md:text-[13px] text-slate-500 uppercase font-bold mb-0.5 md:mb-1">Status</p><p className="text-sm sm:text-base md:text-xl font-black text-teal-400 uppercase tracking-widest">Verified</p></div>
-                                                <div className="bg-white/5 p-3 md:p-4 rounded-xl md:rounded-2xl text-center border border-white/5"><p className="text-[10px] md:text-[13px] text-slate-500 uppercase font-bold mb-0.5 md:mb-1">Plan</p><p className={`text-sm sm:text-base md:text-xl font-black uppercase tracking-widest ${plan === 'premium' ? 'text-amber-400' : 'text-slate-400'}`}>{plan === 'premium' ? '⚡ PRO' : '🆓 FREE'}</p></div>
+                                            {/* Status/Plan strip — flush at bottom, no gap */}
+                                            <div className="grid grid-cols-2 z-10 border-t border-white/5">
+                                                <div className="p-4 md:p-5 text-center border-r border-white/5">
+                                                    <p className="text-[10px] md:text-[13px] text-slate-500 uppercase font-bold mb-0.5 md:mb-1">Status</p>
+                                                    <p className="text-sm sm:text-base md:text-xl font-black text-teal-400 uppercase tracking-widest">Verified</p>
+                                                </div>
+                                                <div className="p-4 md:p-5 text-center">
+                                                    <p className="text-[10px] md:text-[13px] text-slate-500 uppercase font-bold mb-0.5 md:mb-1">Plan</p>
+                                                    <p className={`text-sm sm:text-base md:text-xl font-black uppercase tracking-widest ${plan === 'premium' ? 'text-amber-400' : 'text-slate-400'}`}>{plan === 'premium' ? '⚡ PRO' : 'FREE'}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     );
                                 })()}
 
-                                {/* 2. Emotion Neural Hub (BALANCED) */}
+                                {/* 2. Emotion Neural Hub (right 8 cols) */}
                                 {(() => {
                                     const eLabel = (result.emotion?.label || 'other').toLowerCase();
                                     const eCfg = EMO_MAP[eLabel] || EMO_MAP.other;
                                     return (
-                                        <div className={`${plan === 'premium' ? 'lg:col-span-8' : 'lg:col-span-1'} glass-card rounded-[2rem] md:rounded-[3rem] overflow-hidden border-t-[8px] md:border-t-8 shadow-2xl flex flex-col h-full w-full`} style={{ borderTopColor: eCfg.color }}>
+                                        <div className="lg:col-span-8 glass-card rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl flex flex-col h-full w-full">
+                                            {/* Emotion banner — rounded top matches card, NO border-top hack */}
                                             <div className={`py-10 md:py-16 w-full bg-gradient-to-br ${eCfg.grad} bg-animate flex flex-col items-center justify-center relative shrink-0`}>
-                                                <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
-                                                <motion.span animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 3 }} className="text-[5rem] sm:text-[7rem] md:text-8xl relative z-10 drop-shadow-[0_0_30px_rgba(255,255,255,0.4)] select-none">
+                                                <div className="absolute inset-0 bg-black/30 backdrop-blur-[1px]" />
+                                                <motion.span
+                                                    animate={{ scale: [1, 1.1, 1] }}
+                                                    transition={{ repeat: Infinity, duration: 3 }}
+                                                    className="text-[6rem] sm:text-[8rem] md:text-[9rem] relative z-10 drop-shadow-[0_0_30px_rgba(255,255,255,0.4)] select-none leading-none"
+                                                >
                                                     {eCfg.emoji}
                                                 </motion.span>
-                                                <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white relative z-10 uppercase tracking-tighter mt-2 md:mt-4 drop-shadow-2xl">{eCfg.label}</h3>
+                                                <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white relative z-10 uppercase tracking-tighter mt-3 md:mt-5 drop-shadow-2xl">{eCfg.label}</h3>
                                             </div>
 
                                             <div className="p-6 sm:p-8 md:p-12 flex-grow flex flex-col justify-center">
@@ -340,8 +352,8 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                 </div>
                                 )}
 
-                                {/* 4. Advisory Terminal (PREMIUM = GPT-4o / FREE = fallback advice) */}
-                                <div className={`lg:col-span-12 glass-card p-6 md:p-14 rounded-[2rem] md:rounded-[3rem] border-l-[8px] md:border-l-[16px] border-l-teal-500 relative overflow-hidden bg-gradient-to-br from-teal-500/[0.04] to-transparent shadow-2xl w-full`}>
+                                {/* 4. Advisory Terminal */}
+                                <div className="lg:col-span-12 glass-card p-6 md:p-14 rounded-[2rem] md:rounded-[3rem] border-l-[8px] md:border-l-[16px] border-l-teal-500 relative overflow-hidden bg-gradient-to-br from-teal-500/[0.04] to-transparent shadow-2xl w-full">
                                     <div className="absolute -top-10 -right-10 p-8 md:p-12 opacity-5 text-white pointer-events-none rotate-12"><ShieldAlert size={120} className="md:w-[200px] md:h-[200px]" /></div>
                                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 md:gap-6 mb-6 md:mb-10">
                                         <div className="p-3 md:p-5 bg-teal-500/20 rounded-xl md:rounded-[2rem] text-teal-400 shadow-2xl border border-teal-500/20"><Stethoscope size={24} className="md:w-[36px] md:h-[36px]" /></div>
