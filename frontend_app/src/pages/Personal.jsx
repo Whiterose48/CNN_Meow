@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, MeshDistortMaterial, MeshWobbleMaterial, TorusKnot, Icosahedron, Box, Sphere, Points, PointMaterial, Environment, ContactShadows, Stars, Sparkles, PerspectiveCamera, Dodecahedron } from '@react-three/drei'
 import * as THREE from 'three'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { Brain, Code2, Database, Zap, Target, Cpu, Network, Users, CheckCircle2, Microscope, Briefcase } from 'lucide-react'
+import { Brain, Code2, Database, Zap, Target, Cpu, Network, Users, CheckCircle2, Microscope, Briefcase, Trophy, Award } from 'lucide-react'
 import ErrorBoundary from '../components/ErrorBoundary'
 
 // ─── 0. SUB-COMPONENT: LOOPING TYPING TEXT ───
@@ -56,8 +56,8 @@ const GlobalStyles = () => (
         body { background-color: #010409; color: #f8fafc; overflow-x: hidden; }
         
         .glass-panel { 
-            background: rgba(15, 23, 42, 0.6); 
-            backdrop-filter: blur(20px); 
+            background: rgba(10, 15, 30, 0.75); 
+            backdrop-filter: blur(24px); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
         }
 
@@ -81,9 +81,25 @@ const MEMBER_DATA = {
         role: "AI Data Engineer & Full-Stack Developer", 
         skills: ["Data Engineering (ETL)", "Databricks & Spark", "Machine Learning & Deep Learning", "Full-Stack Development"], 
         passion: "เปลี่ยนข้อมูลดิบที่ซับซ้อนให้เป็นระบบอัจฉริยะและแอปพลิเคชันที่สร้างอิมแพคได้จริงตั้งแต่ต้นน้ำถึงปลายน้ำ", 
+        
         exp: "เชี่ยวชาญการวางสถาปัตยกรรมข้อมูล (Medallion Architecture) และการผสานโมเดล AI ขั้นสูง (GenAI, CNN) เข้ากับ Web Platform ระดับโปรดักชัน", 
+        
+        experiences: [
+            "Databricks - AI Data Engineer Bootcamp",
+            "Co-Founder & Full Stack Developer - STARGAZE",
+            "Teacher Director & Head Workshop Data Science - IT Open House 2025",
+            "Teacher Assistant (DGA 305 - Batches 1-3)"
+        ],
+        competitions: [
+            "Outstanding Student Award, 30th Anniversary IT KMITL",
+            "Top 3 Ranking – KGI Securities Algo Trading Competition",
+            "Finalist (Top 36 Teams) – Smart Irrigation Recommendation",
+            "Special Award Winner – Lung Pathology Detection",
+            "Finalist (Top 20 Teams) – Contactless Gaze Input System"
+        ],
+
         contribution: "ออกแบบและพัฒนา Full-stack Web Application แบบ End-to-End พร้อมบูรณาการโมเดล AI (CNN) และ Large Language Models (LLM) เพื่อสร้างระบบอัจฉริยะที่ตอบโจทย์การใช้งานจริง", 
-        synergy: "เป็นสะพานเชื่อมระหว่าง Data Science และ Software Engineering ทำให้โมเดล AI สามารถสเกลและนำไปใช้งานจริงได้อย่างไร้รอยต่อ", 
+        synergy: "เป็นสะพานเชื่อมระหว่าง AI Engineer และ Full-Stack Development ด้วยแพสชันที่อยากเห็น AI ทำงานได้จริง ผมจึงออกแบบสถาปัตยกรรมเว็บที่พร้อมรองรับและสเกลโมเดลซับซ้อนให้ทำงานได้อย่างสมบูรณ์แบบ", 
         color: "#3b82f6", 
         colorGlow: "rgba(59, 130, 246, 0.9)", 
         gradient: "linear-gradient(to right, #1d4ed8, #3b82f6, #1d4ed8)", 
@@ -92,30 +108,74 @@ const MEMBER_DATA = {
     },
     poom: {
         role: "Project Manager & AI Engineer", 
-        skills: ["React", "Three.js", "Motion Design", "User Psychology"], 
-        passion: "เทคโนโลยีที่ดีต้องมาคู่กับประสบการณ์ที่สวยงาม เพื่อสร้างความไว้วางใจให้ผู้ใช้งาน", 
-        exp: "มีประสบการณ์สร้าง Immersive Web Interface และระบบจัดการ State ที่ซับซ้อนให้ลื่นไหลระดับรางวัล", 
-        contribution: "ออกแบบ Visual Experience และ Interaction สื่อสารข้อมูลยากๆ ให้เข้าใจง่าย", 
-        synergy: "เป็นด่านหน้าปะทะผู้ใช้ เปลี่ยนข้อมูลดิบจาก Phruk และ Nut ให้กลายเป็นงานศิลปะที่เข้าถึงใจ", 
-        color: "#38bdf8", colorGlow: "rgba(56, 189, 248, 0.9)", gradient: "linear-gradient(to right, #0284c7, #38bdf8, #0284c7)", icon: Code2, CoreComponent: FECore 
+        skills: ["Data Engineering", "Data Science", "Data Visualization", "AI & Vision Models"], 
+        passion: "มุ่งมั่นพัฒนาและบริหารโปรเจกต์ด้าน AI เพื่อเปลี่ยนข้อมูลที่ซับซ้อนให้กลายเป็นระบบอัจฉริยะที่ใช้งานได้จริง พร้อมนำเทคโนโลยีด้าน Machine Learning และ Vision Models มาประยุกต์ใช้เพื่อสร้างนวัตกรรมที่สามารถเข้าใจพฤติกรรมและอารมณ์ของสัตว์ได้ลึกกว่าการจำแนกเพียงสายพันธุ์", 
+        
+        exp: "มีประสบการณ์สร้าง Web Application และสถาปัตยกรรมระบบที่ซับซ้อน ตั้งแต่การออกแบบโครงสร้างไปจนถึงการพัฒนาให้สเกลได้", 
+        
+        experiences: [
+            "สร้างระบบ E-Commerce สำหรับจำหน่ายสินค้าและบริหารจัดการออนไลน์",
+            "พัฒนาระบบ Booking และจองที่พักสำหรับธุรกิจโรงแรม",
+            "สร้างระบบ Pet Insight 360 แบบ End-to-End ตั้งแต่ต้นจนจบภายในเวลา 3 วัน"
+        ],
+        competitions: [],
+
+        contribution: "วางแผนและบริหารการพัฒนาโปรเจกต์ด้านเทคโนโลยีและ AI ตั้งแต่การออกแบบระบบ การวิเคราะห์ข้อมูล ไปจนถึงการพัฒนาโมเดลและนำระบบไปใช้งานจริง ประสานงานกับทีมพัฒนาเพื่อให้การทำงานเป็นไปตามเป้าหมาย และดูแลให้ระบบสามารถทำงานได้อย่างมีประสิทธิภาพตั้งแต่ต้นน้ำถึงปลายน้ำ", 
+        synergy: "มีความรับผิดชอบต่อหน้าที่และงานที่ได้รับมอบหมาย มีความตรงต่อเวลาและสามารถบริหารเวลาได้ดี มีทักษะการสื่อสารและการทำงานร่วมกับทีมอย่างมีประสิทธิภาพ", 
+        color: "#38bdf8", 
+        colorGlow: "rgba(56, 189, 248, 0.9)", 
+        gradient: "linear-gradient(to right, #0284c7, #38bdf8, #0284c7)", 
+        icon: Code2, 
+        CoreComponent: FECore 
     },
     boss: { 
-        role: "UX UI Designer", 
-        skills: ["Cloud Architecture", "PostgreSQL", "Docker", "Cybersecurity"], 
-        passion: "ความปลอดภัยของข้อมูลคือหัวใจสำคัญที่สุดของเทคโนโลยีด้านสุขภาพ", 
-        exp: "ออกแบบ Server Scalability ระดับสูง รองรับ Traffic มหาศาล พร้อมวางระบบป้องกันข้อมูลรั่วไหลขั้นสุด", 
-        contribution: "พัฒนาระบบ Backend & Secure API ให้เสถียรและปลอดภัย 100%", 
-        synergy: "กระดูกสันหลังของทีม ที่รับประกันว่า AI ของ Phruk และ UI ของ Poom จะทำงานได้อย่างไร้รอยต่อ", 
-        color: "#60a5fa", colorGlow: "rgba(96, 165, 250, 0.9)", gradient: "linear-gradient(to right, #2563eb, #60a5fa, #2563eb)", icon: Database, CoreComponent: BECore 
+        role: "UX/UI Designer", 
+        skills: ["UX/UI Design", "User Flow & Interaction Design", "Visual Design & Layout", "Responsive Web Design"], 
+        passion: "ออกแบบประสบการณ์ผู้ใช้ที่ทำให้เทคโนโลยี AI ที่ซับซ้อน กลายเป็นระบบที่เข้าใจง่าย ใช้งานได้จริง และช่วยให้เจ้าของสัตว์เลี้ยงเข้าถึงข้อมูลสำคัญได้อย่างชัดเจนในแพลตฟอร์มเดียว", 
+        
+        exp: "เชี่ยวชาญการออกแบบ UX/UI สำหรับ Web Application และ Data Dashboard ที่เน้นการนำเสนอข้อมูลซับซ้อนให้เข้าใจง่าย", 
+        
+        experiences: [
+            "ออกแบบ UX/UI สำหรับ Web Application และ Dashboard",
+            "สร้าง Data Visualization Dashboard เพื่อวิเคราะห์ข้อมูลธุรกิจ",
+            "พัฒนา interface สำหรับแสดงผล Data Analytics และ Business Insights",
+            "Pizza Sales Data Visualization Dashboard",
+            "Data Imputation & Customer Preference Prediction",
+            "Data Pipeline Architecture Project",
+            "Student Sleep Pattern Analysis",
+            "Two-Way ANOVA Analysis of Smoking Behavior in Thailand"
+        ],
+        competitions: [],
+
+        contribution: "ออกแบบ User Experience และ User Interface ของระบบ Pet Insight 360 พัฒนา layout และ visual elements ให้ระบบใช้งานง่ายและเป็นมิตรกับผู้ใช้", 
+        synergy: "เชื่อมต่อระหว่างการวิเคราะห์ข้อมูลเชิงลึกและการออกแบบประสบการณ์ผู้ใช้ ทำให้สามารถสร้างระบบที่ไม่เพียงแค่ประมวลผลข้อมูลอย่างมีประสิทธิภาพ แต่ยังนำเสนอผลลัพธ์ให้ผู้ใช้งานเข้าใจและนำไปใช้ประโยชน์ได้จริง", 
+        color: "#60a5fa", 
+        colorGlow: "rgba(96, 165, 250, 0.9)", 
+        gradient: "linear-gradient(to right, #2563eb, #60a5fa, #2563eb)", 
+        icon: Target,
+        CoreComponent: BECore 
     },
     nut: { 
         role: "Cloud Developer", 
-        skills: ["Big Data Analytics", "MLOps", "Statistics", "Predictive Modeling"], 
-        passion: "ค้นพบรูปแบบที่ซ่อนอยู่ในข้อมูล เพื่อทำนายและป้องกันปัญหาสุขภาพก่อนที่มันจะเกิด", 
-        exp: "วิเคราะห์และจัดการ Big Data นำ Insight ไปสร้างโมเดลทำนายผลที่มี Impact เชิงธุรกิจและการแพทย์", 
-        contribution: "สร้าง Data Pipeline และกระบวนการ Statistical Analysis รองรับข้อมูลมหาศาล", 
-        synergy: "ผู้พิสูจน์ความจริงหลังม่านข้อมูล คอย Feed ข้อมูลที่ถูกต้องให้ AI เพื่อให้มั่นใจในทุกๆ การตัดสินใจ", 
-        color: "#10b981", colorGlow: "rgba(16, 185, 129, 0.9)", gradient: "linear-gradient(to right, #059669, #10b981, #059669)", icon: Zap, CoreComponent: DSCore 
+        skills: ["Data Engineering", "Data Science", "Data Visualization", "Backend Development"], 
+        passion: "ทำระบบที่เข้าใจสัตว์ไม่เพียงเข้าใจแค่สายพันธุ์ แต่เข้าใจลึกถึงความรู้สึกและอารมณ์ผ่านทาง Vision Model", 
+        
+        exp: "มีประสบการณ์ในการจัดการโครงสร้างข้อมูลและสกัด Insight เพื่อนำไปใช้ประโยชน์ร่วมกับเทคโนโลยี Cloud", 
+        
+        experiences: [
+            "ออกแบบสถาปัตยกรรมและฐานข้อมูล (Database) สำหรับระบบจองตั๋วภาพยนตร์",
+            "สร้างระบบ Data Visualization เพื่อวิเคราะห์และนำเสนอข้อมูลสถิติอุบัติเหตุ",
+            "พัฒนาโปรเจกต์ Data Warehouse สำหรับการบริหารจัดการข้อมูลร้านขายโทรศัพท์มือถือ"
+        ],
+        competitions: [],
+
+        contribution: "ดูแลระบบ Backend และ Cloud Infrastructure พร้อมทั้งจัดการระบบฐานข้อมูลเพื่อรองรับการทำงานของ Vision Model", 
+        synergy: "มีความรับผิดชอบต่องานที่ได้รับมอบหมายสูง มีความตรงต่อเวลา และมีทักษะการสื่อสารที่ดีเยี่ยม ช่วยให้การประสานงานกับสมาชิกในทีมเป็นไปอย่างราบรื่น", 
+        color: "#10b981", 
+        colorGlow: "rgba(16, 185, 129, 0.9)", 
+        gradient: "linear-gradient(to right, #059669, #10b981, #059669)", 
+        icon: Zap, 
+        CoreComponent: DSCore 
     }
 }
 
@@ -164,11 +224,11 @@ export default function Personal({ name, setPage }) {
 
             <div className="relative z-20 max-w-5xl mx-auto px-6 pt-52">
 
-                {/* ── HERO SECTION (ชื่อและบทบาท) ── */}
+                {/* ── HERO SECTION ── */}
                 <motion.div style={{ y: heroY, opacity: heroOpacity }} className="flex flex-col items-center mb-40 text-center">
                     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 mb-10 z-30 backdrop-blur-md">
                         <Users size={14} className="text-teal-400" />
-                        <span className="text-[11px] font-tech font-bold tracking-[0.4em] uppercase text-white">สมาชิกในทีม</span>
+                        <span className="text-[17px] font-tech font-bold tracking-[0.4em] uppercase text-white">My Team</span>
                     </div>
 
                     <div className="relative mb-12 z-30 group">
@@ -198,23 +258,23 @@ export default function Personal({ name, setPage }) {
                 <motion.div style={{ y: contentY, opacity: contentOpacity }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 relative z-30">
 
                     {/* 🔥 PASSION */}
-                    <div className="lg:col-span-8 group relative glass-panel p-8 md:p-12 rounded-[2.5rem] overflow-hidden border border-white/5 hover:border-white/20 transition-all duration-500 flex flex-col justify-center">
-                        <div className="absolute -top-24 -right-24 w-64 h-64 blur-[80px] rounded-full" style={{ background: `${data.color}33` }} />
+                    <div className="lg:col-span-8 group relative glass-panel p-8 md:p-12 rounded-[2.5rem] overflow-hidden border border-white/5 hover:border-rose-500/30 transition-all duration-500 flex flex-col justify-center">
+                        <div className="absolute -top-24 -right-24 w-64 h-64 blur-[80px] rounded-full bg-rose-500/10 group-hover:bg-rose-500/20 transition-colors" />
+                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-rose-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                         <div className="relative z-10">
-                            <div className="flex items-center gap-3 mb-6 font-tech font-bold tracking-[0.2em] text-sm uppercase" style={{ color: data.color }}>
+                            <div className="flex items-center gap-3 mb-6 font-tech font-bold tracking-[0.2em] text-sm uppercase text-rose-400">
                                 <span>🔥</span> PASSION
                             </div>
                             <p className="text-2xl md:text-4xl font-bold text-white leading-[1.3] font-body tracking-tight">
                                 "{data.passion}"
                             </p>
                         </div>
-                        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent to-transparent" style={{ backgroundImage: `linear-gradient(to right, transparent, ${data.color}88, transparent)` }} />
                     </div>
 
                     {/* 👥 ความรับผิดชอบ */}
-                    <div className="lg:col-span-4 glass-panel p-8 rounded-[2.5rem] flex flex-col justify-between border border-white/5">
+                    <div className="lg:col-span-4 glass-panel p-8 rounded-[2.5rem] flex flex-col justify-between border border-white/5 hover:border-violet-500/30 border-l-4 border-l-violet-500/50 transition-all group">
                         <div>
-                            <div className="flex items-center gap-3 mb-6 font-tech text-sm tracking-widest text-slate-300 uppercase font-bold">
+                            <div className="flex items-center gap-3 mb-6 font-tech text-sm tracking-widest text-violet-400 uppercase font-bold">
                                 <span>👥</span> ความรับผิดชอบ
                             </div>
                             <p className="text-lg text-white font-medium leading-relaxed font-body">
@@ -223,43 +283,96 @@ export default function Personal({ name, setPage }) {
                         </div>
                         <div className="mt-8 pt-6 border-t border-white/5 flex justify-between items-end">
                             <span className="text-slate-400 text-[12px] font-bold uppercase font-tech">Integrity</span>
-                            <span className="text-2xl font-tech font-black" style={{ color: data.color }}>100%</span>
+                            <span className="text-2xl font-tech font-black text-violet-400 group-hover:scale-110 origin-right transition-transform">100%</span>
                         </div>
                     </div>
 
                     {/* ⚙️ SKILLS */}
-                    <div className="lg:col-span-12 glass-panel p-8 md:p-10 rounded-[2.5rem] border border-white/5 relative">
+                    <div className="lg:col-span-12 glass-panel p-8 md:p-10 rounded-[2.5rem] border border-white/5 relative hover:border-sky-500/20 transition-all">
                         <div className="flex items-center gap-4 mb-8 text-white">
-                            <Cpu size={20} className="text-amber-400" />
-                            <h3 className="font-tech text-xl font-bold tracking-[0.1em] uppercase">Skills</h3>
+                            <Cpu size={24} className="text-sky-400" />
+                            <h3 className="font-tech text-xl font-bold tracking-[0.1em] uppercase text-white">Core Skills</h3>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {data.skills.map((s, i) => (
-                                <div key={i} className="px-5 py-4 rounded-xl bg-white/[0.03] border border-white/5 flex items-center gap-3 hover:bg-white/[0.08] transition-all group">
-                                    <CheckCircle2 size={16} className="opacity-50 group-hover:opacity-100" style={{ color: data.color }} />
-                                    <span className="font-tech font-bold text-sm text-slate-300 group-hover:text-white uppercase tracking-wider">{s}</span>
+                                <div key={i} className="px-6 py-5 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center gap-4 hover:border-sky-500/30 hover:bg-sky-500/[0.05] hover:-translate-y-1 transition-all duration-300 group shadow-lg">
+                                    <CheckCircle2 size={18} className="text-sky-400 opacity-60 group-hover:opacity-100 transition-opacity" />
+                                    <span className="font-body font-medium text-sm md:text-base text-slate-200 group-hover:text-white transition-colors">{s}</span>
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    {/* 💼 ประสบการณ์ */}
-                    <div className="lg:col-span-6 glass-panel p-10 rounded-[2.5rem] border border-white/5 border-l-4" style={{ borderLeftColor: '#64748b' }}>
-                        <div className="flex items-center gap-3 mb-4 text-slate-300">
-                            <span>💼</span>
-                            <h4 className="font-tech font-bold text-lg uppercase tracking-[0.1em]">ประสบการณ์</h4>
+                    {/* 💼 ประสบการณ์ และ 🏆 รางวัล */}
+                    {data.experiences ? (
+                        <>
+                            {/* กล่อง Experience - บังคับขนาดเป็นครึ่งนึง (lg:col-span-6) เสมอ */}
+                            <div className="lg:col-span-6 glass-panel p-8 md:p-10 rounded-[2.5rem] border border-white/5 border-l-4 border-l-emerald-500 hover:border-emerald-500/30 transition-all group">
+                                <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-emerald-500/5 blur-[60px] rounded-full pointer-events-none group-hover:bg-emerald-500/10 transition-all" />
+                                <div className="flex items-center gap-3 mb-6 relative z-10">
+                                    <Briefcase size={22} className="text-emerald-400" />
+                                    <h4 className="font-tech font-bold text-xl uppercase tracking-[0.1em] text-slate-100">Experience</h4>
+                                </div>
+                                <ul className="space-y-4 relative z-10">
+                                    {data.experiences.map((item, i) => (
+                                        <li key={i} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-start gap-4 hover:border-emerald-500/20 hover:bg-emerald-500/[0.03] transition-colors">
+                                            <span className="text-emerald-400 mt-1 flex-shrink-0 opacity-80">▹</span>
+                                            <span className="text-base text-slate-200 font-body font-light leading-relaxed">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {/* กล่อง Competitions & Awards - แสดงเสมอ ถึงไม่มีข้อมูลก็ขึ้นข้อความ Fallback */}
+                            <div className="lg:col-span-6 glass-panel p-8 md:p-10 rounded-[2.5rem] border border-white/5 border-l-4 border-l-amber-500 relative overflow-hidden group hover:border-amber-500/30 transition-all">
+                                <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-amber-500/10 blur-[80px] rounded-full pointer-events-none group-hover:bg-amber-500/20 transition-all" />
+                                
+                                <div className="flex items-center gap-3 mb-6 relative z-10">
+                                    <Trophy size={22} className="text-amber-400" />
+                                    <h4 className="font-tech font-bold text-xl uppercase tracking-[0.1em] text-white">Competitions & Awards</h4>
+                                </div>
+                                
+                                <ul className="space-y-4 relative z-10">
+                                    {/* เช็คว่ามีข้อมูล Array การแข่งขัน และ Array ไม่ว่างเปล่า */}
+                                    {data.competitions && data.competitions.length > 0 ? (
+                                        data.competitions.map((item, i) => (
+                                            <li key={i} className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/[0.03] to-transparent border border-amber-500/10 flex items-start gap-4 hover:border-amber-500/30 hover:bg-amber-500/[0.05] transition-all">
+                                                <Award size={20} className="text-amber-400 mt-0.5 flex-shrink-0" />
+                                                <span className="text-base text-slate-100 font-body font-light leading-relaxed">{item}</span>
+                                            </li>
+                                        ))
+                                    ) : (
+                                        /* แสดงข้อความนี้เมื่อไม่มีการแข่งขัน */
+                                        <li className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center min-h-[120px]">
+                                            <span className="text-base text-slate-400 font-body font-light italic">
+                                                Currently focusing on building impactful projects.
+                                            </span>
+                                        </li>
+                                    )}
+                                </ul>
+                            </div>
+                        </>
+                    ) : (
+                        /* Fallback สำหรับสมาชิกที่ยังเป็น text แบบเก่า (ไม่มี Array ของ Experience) */
+                        <div className="lg:col-span-12 glass-panel p-10 rounded-[2.5rem] border border-white/5 border-l-4 border-l-emerald-500 hover:border-emerald-500/30 transition-all">
+                            <div className="flex items-center gap-3 mb-4 text-emerald-400">
+                                <Briefcase size={24} />
+                                <h4 className="font-tech font-bold text-lg uppercase tracking-[0.1em]">ประสบการณ์</h4>
+                            </div>
+                            <p className="text-base text-slate-200 leading-relaxed font-body font-light">{data.exp}</p>
                         </div>
-                        <p className="text-base text-slate-200 leading-relaxed font-body font-light">{data.exp}</p>
-                    </div>
+                    )}
 
                     {/* 🤝 COMPLEMENTARY SKILLS */}
-                    <div className="lg:col-span-6 glass-panel p-10 rounded-[2.5rem] border border-white/5 border-l-4" style={{ borderLeftColor: data.color }}>
-                        <div className="flex items-center gap-3 mb-4 text-slate-300">
-                            <span>🤝</span>
-                            <h4 className="font-tech font-bold text-lg uppercase tracking-[0.1em]">Complementary Skills</h4>
+                    <div className={`glass-panel p-8 md:p-10 rounded-[2.5rem] border border-white/5 border-l-4 group transition-all hover:border-white/20 ${data.experiences ? 'lg:col-span-12' : 'lg:col-span-6'}`} style={{ borderLeftColor: data.color }}>
+                        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-transparent to-white/[0.01] pointer-events-none rounded-[2.5rem]" />
+                        <div className="flex items-center gap-3 mb-4 text-white relative z-10">
+                            <Network size={22} style={{ color: data.color }} />
+                            <h4 className="font-tech font-bold text-xl uppercase tracking-[0.1em]">Complementary Skills</h4>
                         </div>
-                        <p className="text-base text-slate-200 leading-relaxed font-body font-light">{data.synergy}</p>
+                        <p className="text-lg text-slate-200 leading-relaxed font-body font-light max-w-4xl relative z-10">{data.synergy}</p>
                     </div>
+
                 </motion.div>
 
             </div>
