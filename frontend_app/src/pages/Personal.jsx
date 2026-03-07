@@ -156,7 +156,7 @@ const MEMBER_DATA = {
         CoreComponent: BECore 
     },
     nut: { 
-        role: "Cloud Developer", 
+        role: "Cloud Developer & Software Tester", 
         skills: ["Data Engineering", "Data Science", "Data Visualization", "Backend Development"], 
         passion: "ทำระบบที่เข้าใจสัตว์ไม่เพียงเข้าใจแค่สายพันธุ์ แต่เข้าใจลึกถึงความรู้สึกและอารมณ์ผ่านทาง Vision Model", 
         

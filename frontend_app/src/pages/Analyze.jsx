@@ -88,10 +88,21 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
     const runAnalysis = async () => {
         if (!file) return;
         setStep(0);
+        setError(null);
         const fd = new FormData(); fd.append('file', file);
         try {
             const res = await fetch(`${api}/analyze?plan=${plan || 'free'}`, { method: 'POST', body: fd });
-            if (!res.ok) throw new Error("Neural Link Failure");
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                const detail = errData?.detail;
+                if (detail?.error === 'not_an_animal') {
+                    // แสดง error ใต้รูป แต่คงรูปไว้ ไม่ reset
+                    setError(`⚠️ ${detail.message}`);
+                    setStep(-1);
+                    return;
+                }
+                throw new Error("Neural Link Failure");
+            }
             setStep(1);
             const data = await res.json();
             setRes(data);
@@ -185,6 +196,12 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
                                         <img src={preview} className="w-full h-48 sm:h-64 md:max-h-[350px] object-contain" alt="Preview" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                                     </div>
+                                    {error && (
+                                        <div className="mb-4 px-4 py-3 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-start gap-3">
+                                            <ShieldAlert size={16} className="text-rose-400 mt-0.5 flex-shrink-0" />
+                                            <p className="text-rose-400 font-bold text-xs md:text-sm font-body leading-relaxed">{error}</p>
+                                        </div>
+                                    )}
                                     <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                                         <button onClick={reset} className="w-full sm:w-auto flex-1 py-3 md:py-4 rounded-xl md:rounded-2xl glass-card hover:bg-white/5 text-xs md:text-[17px] font-bold uppercase tracking-widest transition-all">Reject</button>
                                         <button onClick={runAnalysis} className="w-full sm:w-auto flex-[2] py-3 md:py-4 rounded-xl md:rounded-2xl bg-teal-500 text-black text-xs md:text-[17px] font-black uppercase tracking-widest hover:shadow-[0_0_25px_rgba(45,212,191,0.5)] transition-all">Initialize</button>
