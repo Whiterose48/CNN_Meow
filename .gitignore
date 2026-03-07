@@ -13,20 +13,10 @@ venv/
 backend/.env
 frontend_app/.env
 
-# ─── Model Weights (ไฟล์ใหญ่) ────────
-weights/
-*.pt
-*.pth
-
 # ─── Data / Uploads ───────────────────
 uploads/
 data/raw/
 data/processed/
-
-# ─── MLflow ───────────────────────────
-mlruns/
-mlruns.db
-mlartifacts/
 
 # ─── Experiment Tracking ─────────────
 wandb/
@@ -46,9 +36,3 @@ Thumbs.db
 
 # ─── Notebook Checkpoints ────────────
 .ipynb_checkpoints/
-
-# ─── Misc ─────────────────────────────
-*.log
-training_curves.png
-confusion_matrix.png
-sample_predictions.png
