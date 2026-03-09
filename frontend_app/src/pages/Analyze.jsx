@@ -88,10 +88,21 @@ export default function Analyze({ plan: rawPlan, api, setPage }) {
     const runAnalysis = async () => {
         if (!file) return;
         setStep(0);
+        setError(null);
         const fd = new FormData(); fd.append('file', file);
         try {
             const res = await fetch(`${api}/analyze?plan=${plan || 'free'}`, { method: 'POST', body: fd });
-            if (!res.ok) throw new Error("Neural Link Failure");
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                const detail = errData?.detail;
+                if (detail?.error === 'not_an_animal') {
+                    // แสดง error ใต้รูป แต่คงรูปไว้ ไม่ reset
+                    setError(`⚠️ ${detail.message}`);
+                    setStep(-1);
+                    return;
+                }
+                throw new Error("Neural Link Failure");
+            }
             setStep(1);
             const data = await res.json();
             setRes(data);

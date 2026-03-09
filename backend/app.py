@@ -491,6 +491,42 @@ def _classify_breed_imagenet(img_pil: Image.Image) -> dict:
         return {"species": "Unknown", "breed": "Unknown", "confidence": "low", "traits": ""}
 
 
+def is_animal_image(img_pil: Image.Image, threshold: float = 0.05) -> tuple[bool, str]:
+    """
+    ตรวจสอบว่าภาพมีสัตว์หรือไม่ โดยใช้ ImageNet MobileNetV2
+    Returns: (is_animal: bool, detected_label: str)
+    - threshold: ความมั่นใจขั้นต่ำที่ยอมรับว่าเป็นสัตว์ (default 5%)
+    """
+    try:
+        tensor = val_tf(img_pil).unsqueeze(0).to(DEVICE)
+        with torch.no_grad():
+            probs = torch.softmax(_imagenet_model(tensor), dim=1)[0].cpu().numpy()
+
+        top_indices = probs.argsort()[::-1][:10]
+
+        # รวม confidence ของ animal indices ใน top-10
+        animal_score = sum(
+            float(probs[idx]) for idx in top_indices if idx in _ALL_ANIMAL_INDICES
+        )
+
+        # หา best animal label
+        best_animal = next(
+            (_imagenet_labels[idx] for idx in top_indices if idx in _ALL_ANIMAL_INDICES),
+            None
+        )
+
+        top_label = _imagenet_labels[top_indices[0]]
+
+        if animal_score >= threshold and best_animal:
+            return True, best_animal
+        else:
+            return False, top_label
+
+    except Exception as e:
+        print(f"[WARN] is_animal_image failed: {e}")
+        return True, "unknown"  # fallback: ให้ผ่านถ้า error
+
+
 def identify_breed(img_pil: Image.Image) -> dict:
     """Step 2: Use LangChain + GPT-4o Vision for zero-shot breed identification.
     Falls back to ImageNet classifier if LLM is unavailable or fails."""
@@ -902,7 +938,17 @@ async def analyze(file: UploadFile = File(...), plan: str = "free"):
 
     t0 = time.time()
 
-    # Encode thumbnail
+    # ── ตรวจสอบว่าภาพมีสัตว์หรือไม่ ──
+    is_animal, detected_label = is_animal_image(img_pil)
+    if not is_animal:
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "error": "not_an_animal",
+                "message": f"ไม่พบสัตว์ในภาพ — ImageNet ระบุว่าภาพนี้คือ '{detected_label}' กรุณาอัปโหลดภาพสัตว์เท่านั้น",
+                "detected_as": detected_label,
+            }
+        )
     thumb = img_pil.copy()
     thumb.thumbnail((600, 600))
     buf = io.BytesIO()

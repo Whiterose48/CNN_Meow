@@ -22,7 +22,6 @@ export default function Footer({ setPage }) {
                     animation: spin-slow 8s linear infinite;
                 }
             `}</style>
-
             <div className="max-w-5xl mx-auto relative group/footer perspective-1000">
 
                 {/* ─── 3D LAYER 1: The Underlying Running Glow (แสงฟุ้งด้านหลัง) ─── */}
