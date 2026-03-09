@@ -42,12 +42,12 @@ const RealtimeClock = () => {
     }, []);
 
     return (
-        <div className="hidden xl:flex flex-col items-end justify-center mr-6 border-r border-white/10 pr-6 h-10">
-            <div className="flex items-center gap-2 text-slate-400 mb-0.5">
-                <Clock size={12} className="animate-pulse" />
-                <span className="text-[10px] font-tech font-bold tracking-[0.2em] uppercase">Bangkok (UTC+7)</span>
+        <div className="hidden xl:flex flex-col items-end justify-center mr-4 border-r border-white/10 pr-4 h-8">
+            <div className="flex items-center gap-1.5 text-slate-400 mb-[1px]">
+                <Clock size={10} className="animate-pulse" />
+                <span className="text-[8px] font-tech font-bold tracking-[0.2em] uppercase">Bangkok (UTC+7)</span>
             </div>
-            <div className="font-tech text-sm font-semibold text-slate-200 tracking-wider tabular-nums drop-shadow-md">
+            <div className="font-tech text-xs font-semibold text-slate-200 tracking-wider tabular-nums drop-shadow-md">
                 {timeString}
             </div>
         </div>
@@ -87,9 +87,9 @@ export default function Nav({ page, setPage }) {
                 /* Border วิ่งรวมสีทุกหน้าเข้าด้วยกัน */
                 .gradient-border-mask {
                     position: absolute;
-                    inset: -2px;
+                    inset: -1.5px;
                     border-radius: 9999px;
-                    padding: 2px;
+                    padding: 1.5px;
                     background: conic-gradient(from var(--angle), #2dd4bf, #fbbf24, #60a5fa, #e879f9, #2dd4bf);
                     animation: rotate-gradient 4s linear infinite;
                     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -99,63 +99,63 @@ export default function Nav({ page, setPage }) {
                 }
             `}</style>
 
-            <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 font-body">
+            <div className="fixed top-4 left-0 right-0 z-50 flex justify-center px-4 font-body">
 
                 {/* ─── NAV CONTAINER ─── */}
                 <motion.nav
                     initial={{ y: -100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                    className="relative w-full max-w-6xl"
+                    className="relative w-full max-w-5xl"
                 >
                     {/* 1. Multi-color Animated Border */}
                     <div className="gradient-border-mask opacity-70" />
 
                     {/* 2. Glass Background */}
-                    <div className="relative flex items-center justify-between w-full px-4 py-3 bg-[#0f172a]/90 backdrop-blur-2xl rounded-full border border-white/5 shadow-2xl overflow-hidden">
+                    <div className="relative flex items-center justify-between w-full px-3 py-2 bg-[#0f172a]/90 backdrop-blur-2xl rounded-full border border-white/5 shadow-2xl overflow-hidden">
 
                         {/* ── LEFT: LOGO ── */}
                         <div
-                            className="flex items-center gap-3 cursor-pointer group pl-2"
+                            className="flex items-center gap-2 cursor-pointer group pl-2"
                             onClick={() => setPage('home')}
                         >
-                            <div className="relative w-12 h-12 flex items-center justify-center bg-gradient-to-br group-hover:rotate-12 transition-transform duration-300">
+                            <div className="relative w-9 h-9 flex items-center justify-center bg-gradient-to-br group-hover:rotate-12 transition-transform duration-300">
                                 <img
                                     src="/logo.png"
                                     onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
                                     alt="Logo"
-                                    className="w-10 h-10 object-contain"
+                                    className="w-7 h-7 object-contain"
                                 />
-                                <Activity size={24} className="text-white hidden" style={{ display: 'none' }} />
+                                <Activity size={18} className="text-white hidden" style={{ display: 'none' }} />
                                 <div className="absolute inset-0 bg-white/20 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                             <div className="hidden md:flex flex-col">
-                                <span className="text-xl font-tech font-black tracking-tighter text-white leading-none">
+                                <span className="text-lg font-tech font-black tracking-tighter text-white leading-none">
                                     PET<span className="text-teal-400">INSIGHT</span>
                                 </span>
-                                <span className="text-[0.6rem] text-slate-400 tracking-[0.3em] uppercase font-tech font-bold">AI Diagnostics</span>
+                                <span className="text-[9px] text-slate-400 tracking-[0.3em] uppercase font-tech font-bold mt-[1px]">AI Diagnostics</span>
                             </div>
                         </div>
 
                         {/* ── CENTER: COLORFUL PILLS ── */}
-                        <div className="hidden lg:flex items-center gap-1 bg-black/40 p-1.5 rounded-full border border-white/5">
+                        <div className="hidden lg:flex items-center gap-0.5 bg-black/40 p-1 rounded-full border border-white/5">
                             {links.map((l) => {
                                 const isActive = page === l.id;
                                 return (
                                     <button
                                         key={l.id}
                                         onClick={() => setPage(l.id)}
-                                        className={`relative px-6 py-2 rounded-full text-sm font-bold transition-all duration-300 z-10 flex items-center gap-2 font-tech tracking-wide ${isActive ? 'text-[#0b1121]' : `text-slate-400 ${l.hover}`
+                                        className={`relative px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 z-10 flex items-center gap-1.5 font-tech tracking-wide ${isActive ? 'text-[#0b1121]' : `text-slate-400 ${l.hover}`
                                             }`}
                                     >
                                         {isActive && (
                                             <motion.div
                                                 layoutId="active-pill"
-                                                className={`absolute inset-0 rounded-full ${l.color} shadow-[0_0_25px] ${l.shadow}`}
+                                                className={`absolute inset-0 rounded-full ${l.color} shadow-[0_0_15px] ${l.shadow}`}
                                                 transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                                             />
                                         )}
-                                        <l.icon size={16} className={`relative z-10 ${isActive ? 'text-[#0b1121]' : ''}`} />
+                                        <l.icon size={14} className={`relative z-10 ${isActive ? 'text-[#0b1121]' : ''}`} />
                                         <span className={`relative z-10 ${isActive ? 'translate-y-[1px]' : ''}`}>{l.label}</span>
                                     </button>
                                 );
@@ -163,14 +163,14 @@ export default function Nav({ page, setPage }) {
                         </div>
 
                         {/* ── RIGHT: CLOCK & AUTH ── */}
-                        <div className="flex items-center gap-4 pr-2">
+                        <div className="flex items-center gap-3 pr-2">
 
                             {/* Mobile Hamburger Button */}
                             <button
                                 onClick={() => setMobileOpen(!mobileOpen)}
-                                className="lg:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all"
+                                className="lg:hidden p-1.5 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all"
                             >
-                                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                                {mobileOpen ? <X size={18} /> : <Menu size={18} />}
                             </button>
 
                             {/* Clock */}
@@ -184,21 +184,21 @@ export default function Nav({ page, setPage }) {
                                         initial={{ opacity: 0, scale: 0.9 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.9 }}
-                                        className="flex items-center gap-3 pl-2"
+                                        className="flex items-center gap-2 pl-1"
                                     >
                                         <div className="hidden sm:flex flex-col items-end text-right">
-                                            <span className="text-sm font-bold text-white leading-none font-tech tracking-wide uppercase">{user.name || 'User'}</span>
-                                            <span className="text-[9px] text-teal-400 uppercase tracking-widest font-black font-tech">Online</span>
+                                            <span className="text-xs font-bold text-white leading-none font-tech tracking-wide uppercase">{user.name || 'User'}</span>
+                                            <span className="text-[8px] text-teal-400 uppercase tracking-widest font-black font-tech mt-[1px]">Online</span>
                                         </div>
                                         <div className="relative group cursor-pointer" onClick={logout}>
                                             <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
                                             <img
                                                 src={user.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}
                                                 alt="Profile"
-                                                className="relative w-9 h-9 rounded-full border-2 border-[#0f172a] bg-zinc-800 object-cover"
+                                                className="relative w-8 h-8 rounded-full border border-[#0f172a] bg-zinc-800 object-cover"
                                             />
-                                            <div className="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-[#0f172a] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <LogOut size={6} className="text-white" />
+                                            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border border-[#0f172a] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <LogOut size={8} className="text-white" />
                                             </div>
                                         </div>
                                     </motion.div>
@@ -208,12 +208,12 @@ export default function Nav({ page, setPage }) {
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                         onClick={loginWithGoogle}
-                                        className="relative group overflow-hidden rounded-full bg-teal-500 px-6 py-2 transition-all duration-300 cursor-pointer shadow-[0_0_20px_rgba(45,212,191,0.2)] hover:shadow-[0_0_30px_rgba(45,212,191,0.4)]"
+                                        className="relative group overflow-hidden rounded-full bg-teal-500 px-4 py-1.5 transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(45,212,191,0.2)] hover:shadow-[0_0_20px_rgba(45,212,191,0.4)]"
                                     >
                                         <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-teal-300 via-white to-teal-300 opacity-0 group-hover:opacity-20 transition-opacity"></span>
-                                        <div className="relative flex items-center gap-2">
-                                            <LogIn size={16} className="text-[#0b1121]" />
-                                            <span className="text-sm font-black text-[#0b1121] tracking-widest font-tech">LOGIN</span>
+                                        <div className="relative flex items-center gap-1.5">
+                                            <LogIn size={14} className="text-[#0b1121]" />
+                                            <span className="text-xs font-black text-[#0b1121] tracking-widest font-tech mt-[1px]">LOGIN</span>
                                         </div>
                                     </motion.button>
                                 )}
@@ -240,7 +240,7 @@ export default function Nav({ page, setPage }) {
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="fixed top-0 right-0 z-50 h-full w-72 bg-[#0f172a]/95 backdrop-blur-2xl border-l border-white/10 p-6 pt-20 flex flex-col gap-3 lg:hidden shadow-2xl"
+                            className="fixed top-0 right-0 z-50 h-full w-64 bg-[#0f172a]/95 backdrop-blur-2xl border-l border-white/10 p-5 pt-20 flex flex-col gap-2 lg:hidden shadow-2xl"
                         >
                             {links.map((l) => {
                                 const isActive = page === l.id;
@@ -248,40 +248,40 @@ export default function Nav({ page, setPage }) {
                                     <button
                                         key={l.id}
                                         onClick={() => { setPage(l.id); setMobileOpen(false); }}
-                                        className={`flex items-center gap-4 px-5 py-4 rounded-2xl text-left font-tech font-bold text-sm tracking-wider uppercase transition-all ${
+                                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-left font-tech font-bold text-xs tracking-wider uppercase transition-all ${
                                             isActive
                                                 ? `${l.color} text-[#0b1121] shadow-lg`
                                                 : 'text-slate-300 hover:bg-white/5'
                                         }`}
                                     >
-                                        <l.icon size={20} />
+                                        <l.icon size={18} />
                                         <span>{l.label}</span>
                                     </button>
                                 );
                             })}
 
-                            <div className="mt-auto pt-6 border-t border-white/10">
+                            <div className="mt-auto pt-5 border-t border-white/10">
                                 {user ? (
                                     <div className="flex items-center gap-3">
                                         <img
                                             src={user.image || "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"}
                                             alt="Profile"
-                                            className="w-10 h-10 rounded-full border-2 border-teal-500/50"
+                                            className="w-8 h-8 rounded-full border border-teal-500/50"
                                         />
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-bold text-white truncate font-tech">{user.name || 'User'}</p>
-                                            <p className="text-[9px] text-teal-400 uppercase tracking-widest font-black font-tech">Online</p>
+                                            <p className="text-xs font-bold text-white truncate font-tech">{user.name || 'User'}</p>
+                                            <p className="text-[8px] text-teal-400 uppercase tracking-widest font-black font-tech">Online</p>
                                         </div>
-                                        <button onClick={logout} className="p-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all">
-                                            <LogOut size={16} />
+                                        <button onClick={logout} className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all">
+                                            <LogOut size={14} />
                                         </button>
                                     </div>
                                 ) : (
                                     <button
                                         onClick={() => { loginWithGoogle(); setMobileOpen(false); }}
-                                        className="w-full py-3 rounded-full bg-teal-500 text-black text-sm font-black uppercase tracking-widest font-tech flex items-center justify-center gap-2"
+                                        className="w-full py-2.5 rounded-full bg-teal-500 text-black text-xs font-black uppercase tracking-widest font-tech flex items-center justify-center gap-2"
                                     >
-                                        <LogIn size={16} /> LOGIN
+                                        <LogIn size={14} /> LOGIN
                                     </button>
                                 )}
                             </div>

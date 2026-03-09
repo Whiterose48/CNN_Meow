@@ -22,7 +22,7 @@ const GlobalStyles = () => (
         }
         
         .text-glow {
-            text-shadow: 0 0 20px rgba(45,212,191,0.5);
+            text-shadow: 0 0 15px rgba(45,212,191,0.5);
         }
 
         @keyframes shimmer-fast {
@@ -56,7 +56,7 @@ const GlobalStyles = () => (
 const OrganicCells = () => {
     const particles = useMemo(() => {
         return Array.from({ length: 10 }).map(() => ({
-            scale: 0.1 + Math.random() * 0.15,
+            scale: 0.08 + Math.random() * 0.1,
             position: [
                 (Math.random() - 0.5) * 30,
                 (Math.random() - 0.5) * 20,
@@ -69,13 +69,13 @@ const OrganicCells = () => {
     return (
         <group>
             <Float speed={2} rotationIntensity={0.2} floatIntensity={1}>
-                <Sphere args={[1, 32, 32]} position={[8, 2, -5]} scale={2.8}>
+                <Sphere args={[1, 32, 32]} position={[8, 2, -5]} scale={2.2}>
                     <MeshDistortMaterial color="#2dd4bf" envMapIntensity={0.5} clearcoat={1} roughness={0.1} metalness={0.3} distort={0.3} speed={1.5} />
                 </Sphere>
             </Float>
 
             <Float speed={3} rotationIntensity={0.5} floatIntensity={2}>
-                <Sphere args={[1, 24, 24]} position={[-9, -4, -8]} scale={2.2}>
+                <Sphere args={[1, 24, 24]} position={[-9, -4, -8]} scale={1.8}>
                     <MeshWobbleMaterial color="#38bdf8" factor={0.4} speed={1} roughness={0.1} transparent opacity={0.6} />
                 </Sphere>
             </Float>
@@ -88,8 +88,8 @@ const OrganicCells = () => {
                 </Float>
             ))}
 
-            <Sparkles count={40} scale={25} size={4} speed={0.4} opacity={0.4} color="#ccfbf1" />
-            <Stars radius={100} depth={50} count={800} factor={4} saturation={0} fade speed={0.5} />
+            <Sparkles count={40} scale={25} size={3} speed={0.4} opacity={0.4} color="#ccfbf1" />
+            <Stars radius={100} depth={50} count={600} factor={3} saturation={0} fade speed={0.5} />
         </group>
     )
 }
@@ -99,10 +99,10 @@ function HealthBackground() {
         <div className="fixed inset-0 z-0 pointer-events-none">
             <div className="absolute inset-0 bg-[#0f172a]" />
             <div className="absolute inset-0 bg-gradient-to-tr from-[#0f172a] via-[#1e293b] to-[#134e4a] opacity-80" />
-            <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-teal-500/10 blur-[150px] animate-pulse-slow will-change-transform" />
-            <div className="absolute bottom-[-20%] left-[-10%] w-[800px] h-[800px] bg-blue-500/10 blur-[150px] animate-pulse-slow delay-1000 will-change-transform" />
+            <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-teal-500/10 blur-[120px] animate-pulse-slow will-change-transform" />
+            <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-500/10 blur-[120px] animate-pulse-slow delay-1000 will-change-transform" />
 
-            <Canvas camera={{ position: [0, 0, 12], fov: 35 }} gl={{ antialias: false, powerPreference: "high-performance" }} dpr={[1, 1.5]} performance={{ min: 0.5 }}>
+            <Canvas camera={{ position: [0, 0, 12], fov: 35 }} gl={{ antialias: false, powerPreference: "high-performance" }} dpr={[1, 1.2]} performance={{ min: 0.5 }}>
                 <Suspense fallback={null}>
                     <ambientLight intensity={0.8} />
                     <pointLight position={[10, 10, 10]} intensity={1.2} color="#ffffff" />
@@ -118,11 +118,11 @@ function HealthBackground() {
 const ScrollReveal3D = ({ children, delay = 0 }) => {
     return (
         <motion.div
-            initial={{ opacity: 0, rotateX: 45, y: 100, scale: 0.9 }}
+            initial={{ opacity: 0, rotateX: 30, y: 50, scale: 0.95 }}
             whileInView={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
-            transition={{ type: "spring", stiffness: 50, damping: 20, delay: delay, duration: 0.8 }}
-            style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
+            transition={{ type: "spring", stiffness: 60, damping: 20, delay: delay, duration: 0.6 }}
+            style={{ transformStyle: "preserve-3d", perspective: "800px" }}
         >
             {children}
         </motion.div>
@@ -132,8 +132,8 @@ const ScrollReveal3D = ({ children, delay = 0 }) => {
 const TiltCard = ({ children, className = "" }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
-    const rotateX = useTransform(y, [-100, 100], [10, -10]);
-    const rotateY = useTransform(x, [-100, 100], [-10, 10]);
+    const rotateX = useTransform(y, [-100, 100], [3, -3]);
+    const rotateY = useTransform(x, [-100, 100], [-3, 3]);
 
     function handleMouseMove(e) {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -142,29 +142,28 @@ const TiltCard = ({ children, className = "" }) => {
     }
 
     return (
-        <motion.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }} onMouseMove={handleMouseMove} onMouseLeave={() => { x.set(0); y.set(0); }} className={`perspective-1000 ${className}`}>
+        <motion.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }} onMouseMove={handleMouseMove} onMouseLeave={() => { x.set(0); y.set(0); }} className={`perspective-800 ${className}`}>
             {children}
         </motion.div>
     );
 };
 
 // ─── 3. UI COMPONENTS WITH RUNNING LIGHTS ───
-
 const FeatureItem = ({ icon: Icon, title, desc, delay }) => (
     <ScrollReveal3D delay={delay}>
         <TiltCard className="h-full group">
-            <div className="relative h-full rounded-[2rem] p-[1.5px] overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 w-[250%] h-[250%] -translate-x-1/2 -translate-y-1/2 animate-spin-border bg-[conic-gradient(from_0deg,transparent_0%,transparent_75%,#2dd4bf_85%,#3b82f6_100%)] opacity-40 group-hover:opacity-100 transition-opacity duration-500 z-0" />
+            <div className="relative h-full rounded-2xl p-[1px] overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-spin-border bg-[conic-gradient(from_0deg,transparent_0%,transparent_75%,#2dd4bf_85%,#3b82f6_100%)] opacity-40 group-hover:opacity-100 transition-opacity duration-500 z-0" />
                 
-                <div className="relative z-10 h-full w-full bg-[#0f172a]/95 backdrop-blur-xl rounded-[calc(2rem-1.5px)] p-6 md:p-8 flex flex-col items-start overflow-hidden">
+                <div className="relative z-10 h-full w-full bg-[#0f172a]/95 backdrop-blur-lg rounded-[calc(1rem-1px)] p-5 md:p-6 flex flex-col items-start overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#1e293b]/50 to-transparent opacity-50" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-teal-500/0 to-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-teal-500/0 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     
-                    <div className="w-14 h-14 md:w-16 md:h-16 relative z-20 rounded-2xl bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center mb-6 text-white shadow-[0_0_20px_rgba(45,212,191,0.3)] group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(45,212,191,0.6)] transition-all duration-300">
-                        <Icon size={28} className="md:w-8 md:h-8" />
+                    <div className="w-10 h-10 md:w-12 md:h-12 relative z-20 rounded-xl bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center mb-4 text-white shadow-[0_0_15px_rgba(45,212,191,0.3)] group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(45,212,191,0.5)] transition-all duration-300">
+                        <Icon size={20} className="md:w-6 md:h-6" />
                     </div>
-                    <h3 className="text-xl md:text-2xl z-20 font-tech font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-200 group-hover:from-teal-300 group-hover:to-blue-400 transition-all duration-300 uppercase tracking-wide">{title}</h3>
-                    <p className="text-slate-400 z-20 font-body leading-relaxed text-sm">{desc}</p>
+                    <h3 className="text-lg md:text-xl z-20 font-tech font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-200 group-hover:from-teal-300 group-hover:to-blue-400 transition-all duration-300 uppercase tracking-wide">{title}</h3>
+                    <p className="text-slate-400 z-20 font-body leading-relaxed text-xs md:text-sm">{desc}</p>
                 </div>
             </div>
         </TiltCard>
@@ -173,11 +172,11 @@ const FeatureItem = ({ icon: Icon, title, desc, delay }) => (
 
 const StatBox = ({ value, label, delay }) => (
     <ScrollReveal3D delay={delay}>
-        <div className="relative rounded-3xl p-[1.5px] overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
-            <div className="absolute top-1/2 left-1/2 w-[250%] h-[250%] -translate-x-1/2 -translate-y-1/2 animate-spin-border bg-[conic-gradient(from_0deg,transparent_0%,transparent_60%,#2dd4bf_80%,#3b82f6_100%)] opacity-30 group-hover:opacity-100 transition-opacity duration-500 z-0" />
-            <div className="relative h-full text-center p-6 md:p-8 rounded-[calc(1.5rem-1.5px)] bg-[#111827]/90 backdrop-blur-md z-10">
-                <div className="text-4xl md:text-5xl font-tech font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-teal-300 mb-2 drop-shadow-md group-hover:animate-gradient-x group-hover:bg-[length:200%_auto]">{value}</div>
-                <div className="text-[10px] md:text-xs font-bold font-body uppercase tracking-[0.2em] text-teal-400">{label}</div>
+        <div className="relative rounded-2xl p-[1px] overflow-hidden group hover:-translate-y-0.5 transition-transform duration-300">
+            <div className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-spin-border bg-[conic-gradient(from_0deg,transparent_0%,transparent_60%,#2dd4bf_80%,#3b82f6_100%)] opacity-30 group-hover:opacity-100 transition-opacity duration-500 z-0" />
+            <div className="relative h-full text-center p-4 md:p-5 rounded-[calc(1rem-1px)] bg-[#111827]/90 backdrop-blur-md z-10">
+                <div className="text-2xl md:text-3xl font-tech font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-teal-300 mb-1 drop-shadow-sm group-hover:animate-gradient-x group-hover:bg-[length:200%_auto]">{value}</div>
+                <div className="text-[9px] md:text-[10px] font-bold font-body uppercase tracking-[0.15em] text-teal-400">{label}</div>
             </div>
         </div>
     </ScrollReveal3D>
@@ -188,10 +187,10 @@ export default function Home({ setPage }) {
     const containerRef = useRef(null)
     const { scrollYProgress } = useScroll({ target: containerRef })
 
-    const yHero = useTransform(scrollYProgress, [0, 1], [0, 300])
+    const yHero = useTransform(scrollYProgress, [0, 1], [0, 200])
     const opacityHero = useTransform(scrollYProgress, [0, 0.3], [1, 0])
-    const rotateShowcase = useTransform(scrollYProgress, [0.6, 1], [15, 0])
-    const scaleShowcase = useTransform(scrollYProgress, [0.6, 1], [0.8, 1])
+    const rotateShowcase = useTransform(scrollYProgress, [0.6, 1], [10, 0])
+    const scaleShowcase = useTransform(scrollYProgress, [0.6, 1], [0.9, 1])
 
     const analysisData = {
         image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80",
@@ -215,28 +214,28 @@ export default function Home({ setPage }) {
             <div ref={containerRef} className="relative z-10">
 
                 {/* ── HERO SECTION ── */}
-                <section className="min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 relative perspective-1000">
-                    <motion.div style={{ y: yHero, opacity: opacityHero }} className="text-center relative z-20 max-w-5xl mt-20 md:mt-0">
+                <section className="min-h-[85vh] flex flex-col justify-center items-center px-4 sm:px-6 relative perspective-1000">
+                    <motion.div style={{ y: yHero, opacity: opacityHero }} className="text-center relative z-20 max-w-4xl mt-16 md:mt-0">
                         
                         <motion.div
-                            initial={{ y: -50, opacity: 0, rotateX: 90 }}
+                            initial={{ y: -30, opacity: 0, rotateX: 90 }}
                             whileInView={{ y: 0, opacity: 1, rotateX: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.2, type: "spring" }}
-                            className="inline-flex items-center gap-2 md:gap-3 px-4 py-2 md:px-6 md:py-2 rounded-full bg-teal-900/30 border border-teal-500/30 backdrop-blur-md mb-6 md:mb-8 shadow-[0_0_30px_rgba(45,212,191,0.2)]"
+                            className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-1.5 rounded-full bg-teal-900/30 border border-teal-500/30 backdrop-blur-md mb-4 md:mb-6 shadow-[0_0_20px_rgba(45,212,191,0.2)]"
                         >
-                            <HeartPulse size={16} className="text-teal-400 animate-pulse md:w-[18px] md:h-[18px]" />
-                            <span className="text-[10px] md:text-xl font-tech font-bold tracking-[0.2em] uppercase text-teal-100">AI Health Diagnostics</span>
+                            <HeartPulse size={14} className="text-teal-400 animate-pulse md:w-[14px] md:h-[14px]" />
+                            <span className="text-[9px] md:text-xs font-tech font-bold tracking-[0.15em] uppercase text-teal-100">AI Health Diagnostics</span>
                         </motion.div>
 
                         <motion.h1
-                            initial={{ scale: 0.8, opacity: 0 }}
+                            initial={{ scale: 0.9, opacity: 0 }}
                             whileInView={{ scale: 1, opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, ease: "easeOut" }}
-                            className="font-tech text-[4rem] leading-none sm:text-7xl md:text-[8rem] lg:text-[9rem] font-black tracking-tighter md:leading-[0.85] mb-6 md:mb-8"
+                            transition={{ duration: 0.6, ease: "easeOut" }}
+                            className="font-tech text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black tracking-tight md:leading-[0.9] mb-4 md:mb-5"
                         >
-                            <span className="text-white drop-shadow-lg">BETTER</span> <br />
+                            <span className="text-white drop-shadow-md">BETTER</span> <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-blue-400 to-teal-300 animate-gradient-x text-glow">
                                 HEALTH
                             </span>
@@ -246,28 +245,28 @@ export default function Home({ setPage }) {
                             initial={{ y: 20, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.5 }}
-                            className="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-2xl mx-auto mb-10 md:mb-12 font-light leading-relaxed px-2"
+                            transition={{ delay: 0.4 }}
+                            className="text-sm sm:text-base md:text-lg text-slate-300 max-w-lg mx-auto mb-8 md:mb-10 font-light leading-relaxed px-2"
                         >
                             Elevate your pet's healthcare with Intelligent AI. <br className="hidden md:block" />
-                            Analyze emotions and vital signs via <span className="text-teal-300 font-semibold">Computer Vision</span>.
+                            Analyze emotions and vital signs via <span className="text-teal-300 font-medium">Computer Vision</span>.
                         </motion.p>
 
                         <motion.div
                             initial={{ y: 20, opacity: 0 }}
                             whileInView={{ y: 0, opacity: 1 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.7 }}
-                            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center w-full sm:w-auto px-6 sm:px-0"
+                            transition={{ delay: 0.5 }}
+                            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center w-full sm:w-auto px-6 sm:px-0"
                         >
-                            <button onClick={() => setPage('analyze')} className="w-full sm:w-auto relative px-8 py-4 md:px-10 md:py-5 bg-gradient-to-r from-teal-500 to-blue-600 text-white rounded-full font-tech font-bold text-xl md:text-2xl overflow-hidden group shadow-[0_0_50px_rgba(45,212,191,0.4)] hover:scale-105 transition-transform duration-300 border border-teal-400/50">
-                                <span className="relative z-10 flex items-center justify-center gap-3">
-                                    Start Scan <ScanFace size={24} />
+                            <button onClick={() => setPage('analyze')} className="w-full sm:w-auto relative px-6 py-3 md:px-8 md:py-3.5 bg-gradient-to-r from-teal-500 to-blue-600 text-white rounded-full font-tech font-bold text-base md:text-lg overflow-hidden group shadow-[0_0_30px_rgba(45,212,191,0.3)] hover:scale-105 transition-transform duration-300 border border-teal-400/50">
+                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                    Start Scan <ScanFace size={18} />
                                 </span>
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent w-full h-full animate-shimmer-fast mix-blend-overlay" />
                             </button>
 
-                            <button onClick={() => setPage('plans')} className="w-full sm:w-auto px-8 py-4 md:px-10 md:py-5 bg-white/5 border border-white/20 rounded-full font-tech font-bold text-xl md:text-2xl hover:bg-white/10 hover:border-teal-400/50 backdrop-blur-md transition-all text-slate-200 hover:text-white hover:scale-105 shadow-[0_0_20px_rgba(0,0,0,0)] hover:shadow-[0_0_30px_rgba(45,212,191,0.2)]">
+                            <button onClick={() => setPage('plans')} className="w-full sm:w-auto px-6 py-3 md:px-8 md:py-3.5 bg-white/5 border border-white/20 rounded-full font-tech font-bold text-base md:text-lg hover:bg-white/10 hover:border-teal-400/50 backdrop-blur-md transition-all text-slate-200 hover:text-white hover:scale-105 shadow-none hover:shadow-[0_0_20px_rgba(45,212,191,0.2)]">
                                 Explore Plan
                             </button>
                         </motion.div>
@@ -275,10 +274,10 @@ export default function Home({ setPage }) {
                 </section>
 
                 {/* ── FLOATING STATS ── */}
-                <section className="relative z-30 px-4 sm:px-6 -mt-16 md:-mt-32 mb-20 md:mb-32">
-                    <div className="max-w-5xl mx-auto">
+                <section className="relative z-30 px-4 sm:px-6 -mt-10 md:-mt-16 mb-16 md:mb-24">
+                    <div className="max-w-4xl mx-auto">
                         <TiltCard>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] bg-[#1e293b]/40 border border-white/10 backdrop-blur-2xl shadow-2xl">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4 p-3 md:p-4 rounded-[1.5rem] bg-[#1e293b]/40 border border-white/10 backdrop-blur-xl shadow-xl overflow-hidden">
                                 <StatBox value="99.8%" label="Accuracy" delay={0.1} />
                                 <StatBox value="< 3.0s" label="Rapid Scan" delay={0.2} />
                                 <StatBox value="150+" label="Species & Breeds" delay={0.3} />
@@ -288,92 +287,90 @@ export default function Home({ setPage }) {
                 </section>
 
                 {/* ── CORE ENGINE ── */}
-                <section className="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-20 relative">
+                <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8 md:py-12 relative">
                     <ScrollReveal3D>
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-20 border-b border-white/10 pb-6 md:pb-10">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 border-b border-white/10 pb-4 md:pb-6">
                             <div>
-                                <h2 className="text-4xl sm:text-5xl md:text-7xl font-tech font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-teal-200 to-white animate-gradient-x uppercase text-glow">CORE ENGINE</h2>
-                                <p className="text-slate-400 text-base md:text-lg max-w-md">Driven by advanced Neural Networks.</p>
+                                <h2 className="text-3xl sm:text-4xl md:text-5xl font-tech font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white via-teal-200 to-white animate-gradient-x uppercase text-glow">CORE ENGINE</h2>
+                                <p className="text-slate-400 text-sm md:text-base max-w-sm">Driven by advanced Neural Networks.</p>
                             </div>
-                            <div className="hidden md:block text-teal-500 drop-shadow-[0_0_15px_rgba(45,212,191,0.8)]">
-                                <Dna size={80} className="animate-spin-slow" />
+                            <div className="hidden md:block text-teal-500 drop-shadow-[0_0_10px_rgba(45,212,191,0.6)]">
+                                <Dna size={48} className="animate-spin-slow" />
                             </div>
                         </div>
                     </ScrollReveal3D>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 perspective-1000">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 perspective-800 overflow-hidden">
                         <FeatureItem icon={ScanFace} title="Emotion AI" desc="Detects 4 core emotions (Happy, Sad, Angry, Other) using facial micro-expressions." delay={0.1} />
-                        <FeatureItem icon={Shield} title="Species & Breed ID" desc="Universal animal identification — dogs, cats, birds, reptiles, fish, mammals & more using ImageNet CNN classifier." delay={0.2} />
-                        <FeatureItem icon={Stethoscope} title="Vet Advisor" desc="Tailored care for your pet's unique breed and emotions. Analyze their mood to get instant, actionable health and behavioral recommendations." delay={0.3} />
+                        <FeatureItem icon={Shield} title="Species ID" desc="Universal identification — dogs, cats, birds, reptiles & more using ImageNet CNN." delay={0.2} />
+                        <FeatureItem icon={Stethoscope} title="Vet Advisor" desc="Analyze their mood to get instant, actionable health and behavioral recommendations." delay={0.3} />
                     </div>
                 </section>
 
                 {/* ── DEEP ANALYSIS ── */}
-                <section className="py-20 md:py-40 px-4 sm:px-6 overflow-hidden perspective-2000">
+                <section className="py-16 md:py-24 px-4 sm:px-6 overflow-hidden perspective-1000">
                     <ScrollReveal3D>
-                        <div className="max-w-6xl mx-auto mb-12 md:mb-20 text-center">
-                            <h2 className="text-4xl sm:text-5xl md:text-7xl font-tech font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-blue-400 to-teal-300 animate-gradient-x text-glow">DEEP ANALYSIS</h2>
-                            <p className="text-slate-400 text-lg md:text-xl">In-depth insights derived from Computer Vision.</p>
+                        <div className="max-w-4xl mx-auto mb-10 md:mb-14 text-center">
+                            <h2 className="text-3xl sm:text-4xl md:text-5xl font-tech font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-blue-400 to-teal-300 animate-gradient-x text-glow">DEEP ANALYSIS</h2>
+                            <p className="text-slate-400 text-sm md:text-base">In-depth insights derived from Computer Vision.</p>
                         </div>
                     </ScrollReveal3D>
 
-                    <motion.div style={{ rotateX: rotateShowcase, scale: scaleShowcase }} className="max-w-6xl mx-auto">
+                    <motion.div style={{ rotateX: rotateShowcase, scale: scaleShowcase }} className="max-w-4xl mx-auto">
                         <TiltCard>
-                            <div className="relative rounded-[2rem] md:rounded-[3.2rem] p-[2px] overflow-hidden group shadow-[0_20px_100px_-20px_rgba(45,212,191,0.3)]">
+                            <div className="relative rounded-[1.5rem] md:rounded-[2rem] p-[1.5px] overflow-hidden group shadow-[0_10px_50px_-15px_rgba(45,212,191,0.2)]">
                                 <div className="absolute top-1/2 left-1/2 w-[200%] h-[200%] -translate-x-1/2 -translate-y-1/2 animate-spin-border bg-[conic-gradient(from_0deg,transparent_0%,transparent_70%,#2dd4bf_80%,#3b82f6_100%)] opacity-70 group-hover:opacity-100 transition-opacity" />
                                 
-                                <div className="relative z-10 rounded-[calc(2rem-2px)] md:rounded-[3rem] bg-[#0f172a]/95 backdrop-blur-xl overflow-hidden">
-                                    <div className="grid md:grid-cols-2 md:min-h-[650px]">
-                                        {/* Image Section - Ensure height on mobile */}
-                                        <div className="relative overflow-hidden bg-black h-80 sm:h-96 md:h-auto">
-                                            <img src={analysisData.image} alt="Analyzed Pet" loading="lazy" className="w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-110 opacity-80" />
+                                <div className="relative z-10 rounded-[calc(1.5rem-1.5px)] md:rounded-[calc(2rem-1.5px)] bg-[#0f172a]/95 backdrop-blur-lg overflow-hidden">
+                                    <div className="grid md:grid-cols-2 md:min-h-[400px]">
+                                        {/* Image Section */}
+                                        <div className="relative overflow-hidden bg-black h-56 sm:h-72 md:h-auto">
+                                            <img src={analysisData.image} alt="Analyzed Pet" loading="lazy" className="w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-105 opacity-80" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent" />
 
                                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                <div className="w-[85%] h-[85%] border-2 border-teal-500/30 rounded-3xl relative overflow-hidden">
-                                                    <div className="absolute top-0 left-0 w-full h-[3px] bg-teal-400 shadow-[0_0_30px_var(--color-sage)] animate-scan" />
-                                                    <div className="absolute top-0 left-0 w-6 h-6 md:w-8 md:h-8 border-t-4 border-l-4 border-teal-500" />
-                                                    <div className="absolute top-0 right-0 w-6 h-6 md:w-8 md:h-8 border-t-4 border-r-4 border-teal-500" />
-                                                    <div className="absolute bottom-0 left-0 w-6 h-6 md:w-8 md:h-8 border-b-4 border-l-4 border-teal-500" />
-                                                    <div className="absolute bottom-0 right-0 w-6 h-6 md:w-8 md:h-8 border-b-4 border-r-4 border-teal-500" />
+                                                <div className="w-[80%] h-[80%] border border-teal-500/30 rounded-2xl relative overflow-hidden">
+                                                    <div className="absolute top-0 left-0 w-full h-[2px] bg-teal-400 shadow-[0_0_20px_#2dd4bf] animate-scan" />
+                                                    <div className="absolute top-0 left-0 w-4 h-4 md:w-6 md:h-6 border-t-2 border-l-2 border-teal-500" />
+                                                    <div className="absolute top-0 right-0 w-4 h-4 md:w-6 md:h-6 border-t-2 border-r-2 border-teal-500" />
+                                                    <div className="absolute bottom-0 left-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-l-2 border-teal-500" />
+                                                    <div className="absolute bottom-0 right-0 w-4 h-4 md:w-6 md:h-6 border-b-2 border-r-2 border-teal-500" />
                                                 </div>
                                             </div>
 
-                                            <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8 bg-black/60 backdrop-blur-xl border border-teal-500/30 px-4 py-2 md:px-6 md:py-3 rounded-2xl flex items-center gap-3 md:gap-4 shadow-xl transform group-hover:translate-y-[-10px] transition-transform duration-500">
-                                                <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-teal-500/20 flex items-center justify-center text-xl md:text-2xl">🐕</div>
+                                            <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 bg-black/60 backdrop-blur-md border border-teal-500/30 px-3 py-2 md:px-4 md:py-2.5 rounded-xl flex items-center gap-2 md:gap-3 shadow-lg transform group-hover:translate-y-[-3px] transition-transform duration-500">
+                                                <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-teal-500/20 flex items-center justify-center text-sm md:text-base">🐕</div>
                                                 <div>
-                                                    <div className="font-bold text-white text-base md:text-lg">{analysisData.breed}</div>
-                                                    <div className="text-teal-400 text-[10px] md:text-xs font-mono tracking-wider">CONFIDENCE: {analysisData.confidence}%</div>
+                                                    <div className="font-bold text-white text-xs md:text-sm">{analysisData.breed}</div>
+                                                    <div className="text-teal-400 text-[8px] md:text-[9px] font-mono tracking-wide">CONF: {analysisData.confidence}%</div>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {/* Result Section */}
-                                        <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center relative">
-                                            <div className="hidden md:block absolute top-10 right-10 w-20 h-1 bg-teal-500/20" />
-
-                                            <h3 className="text-2xl md:text-4xl font-tech font-bold mb-6 md:mb-8 text-white flex items-center gap-3">
-                                                <Microscope className="text-teal-400 w-8 h-8 md:w-9 md:h-9" />
+                                        <div className="p-6 md:p-8 lg:p-10 flex flex-col justify-center relative">
+                                            <h3 className="text-xl md:text-2xl font-tech font-bold mb-5 md:mb-6 text-white flex items-center gap-2">
+                                                <Microscope className="text-teal-400 w-5 h-5 md:w-6 md:h-6" />
                                                 ANALYSIS RESULT
                                             </h3>
 
-                                            <div className="space-y-6 md:space-y-8">
+                                            <div className="space-y-4 md:space-y-5">
                                                 {analysisData.emotions.map((item, idx) => (
                                                     <div key={idx} className="group/bar">
-                                                        <div className="flex justify-between items-center mb-2 md:mb-3">
-                                                            <div className="flex items-center gap-2 md:gap-3">
-                                                                <span className="text-xl md:text-2xl bg-white/5 p-1.5 md:p-2 rounded-lg">{item.emoji}</span>
-                                                                <span className="text-base md:text-lg font-medium text-slate-200">{item.label}</span>
+                                                        <div className="flex justify-between items-center mb-1.5 md:mb-2">
+                                                            <div className="flex items-center gap-2">
+                                                                <span className="text-sm md:text-base bg-white/5 p-1 md:p-1.5 rounded-md">{item.emoji}</span>
+                                                                <span className="text-xs md:text-sm font-medium text-slate-200">{item.label}</span>
                                                             </div>
-                                                            <span className="font-tech text-transparent bg-clip-text bg-gradient-to-r from-white to-teal-300 animate-gradient-x text-xl md:text-2xl font-bold">{item.value}%</span>
+                                                            <span className="font-tech text-transparent bg-clip-text bg-gradient-to-r from-white to-teal-300 animate-gradient-x text-sm md:text-base font-bold">{item.value}%</span>
                                                         </div>
-                                                        <div className="h-2.5 md:h-3 w-full bg-black/60 rounded-full overflow-hidden border border-white/5 p-[2px]">
+                                                        <div className="h-1.5 md:h-2 w-full bg-black/60 rounded-full overflow-hidden border border-white/5 p-[1px]">
                                                             <motion.div
                                                                 initial={{ width: 0 }}
                                                                 whileInView={{ width: `${item.value}%` }}
                                                                 viewport={{ once: true }}
-                                                                transition={{ duration: 1.2, delay: 0.5 + idx * 0.1, type: "spring" }}
-                                                                className={`h-full rounded-full bg-gradient-to-r ${item.gradient} shadow-[0_0_15px_rgba(255,255,255,0.3)] relative overflow-hidden`}
+                                                                transition={{ duration: 1, delay: 0.3 + idx * 0.1, type: "spring" }}
+                                                                className={`h-full rounded-full bg-gradient-to-r ${item.gradient} shadow-[0_0_10px_rgba(255,255,255,0.2)] relative overflow-hidden`}
                                                             >
                                                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent w-full h-full animate-shimmer-fast" />
                                                             </motion.div>
@@ -390,44 +387,44 @@ export default function Home({ setPage }) {
                 </section>
 
                 {/* ── FOOTER ── */}
-                <section className="relative py-40 md:py-72 overflow-hidden flex flex-col items-center justify-center">
+                <section className="relative py-24 md:py-40 overflow-hidden flex flex-col items-center justify-center">
                     <div className="absolute inset-0 pointer-events-none">
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="absolute w-[400px] h-[400px] md:w-[800px] md:h-[800px] border border-teal-500/5 rounded-full animate-spin-slow" />
-                            <div className="absolute w-[300px] h-[300px] md:w-[600px] md:h-[600px] border-2 border-dashed border-teal-500/10 rounded-full animate-spin-reverse opacity-40" />
-                            <div className="absolute w-[200px] h-[200px] md:w-[450px] md:h-[450px] rounded-full border border-white/5 animate-spin-border" />
+                            <div className="absolute w-[300px] h-[300px] md:w-[500px] md:h-[500px] border border-teal-500/5 rounded-full animate-spin-slow" />
+                            <div className="absolute w-[200px] h-[200px] md:w-[350px] md:h-[350px] border-2 border-dashed border-teal-500/10 rounded-full animate-spin-reverse opacity-40" />
+                            <div className="absolute w-[150px] h-[150px] md:w-[250px] md:h-[250px] rounded-full border border-white/5 animate-spin-border" />
                         </div>
                     </div>
 
-                    <div className="relative z-10 text-center max-w-7xl px-4 w-full">
+                    <div className="relative z-10 text-center max-w-4xl px-4 w-full">
                         <ScrollReveal3D delay={0.2}>
-                            <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 md:gap-6 mb-6 md:mb-8 font-mono text-[10px] sm:text-xs md:text-sm text-teal-400/60 tracking-[0.2em] md:tracking-[0.4em]">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-teal-400 animate-pulse" />
+                            <div className="flex flex-col sm:flex-row justify-center items-center gap-1.5 sm:gap-3 md:gap-4 mb-4 md:mb-6 font-mono text-[9px] md:text-[10px] text-teal-400/60 tracking-[0.15em] md:tracking-[0.25em]">
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
                                     <span>READY_STATUS</span>
                                 </div>
-                                <div className="hidden sm:block w-[1px] h-4 bg-white/10" />
-                                <div className="flex items-center gap-2 font-bold text-teal-400">
-                                    <Activity size={14} className="md:w-4 md:h-4" />
+                                <div className="hidden sm:block w-[1px] h-3 bg-white/10" />
+                                <div className="flex items-center gap-1.5 font-bold text-teal-400">
+                                    <Activity size={12} />
                                     <span>UPLINK_STABLE</span>
                                 </div>
                             </div>
 
-                            <h2 className="text-[3.5rem] leading-[0.9] sm:text-7xl md:text-[9rem] lg:text-[11rem] font-tech font-black mb-6 md:mb-8 tracking-tighter text-white">
-                                <span className="opacity-30 font-medium text-4xl sm:text-6xl md:text-8xl">READY TO</span><br />
-                                <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-blue-400 to-teal-300 animate-gradient-x text-glow mt-2 md:mt-0">
+                            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-tech font-black mb-4 md:mb-6 tracking-tight text-white leading-none">
+                                <span className="opacity-30 font-medium text-2xl sm:text-3xl md:text-5xl">READY TO</span><br />
+                                <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-teal-300 via-blue-400 to-teal-300 animate-gradient-x text-glow mt-1 md:mt-2">
                                     Analyze?
                                 </span>
                             </h2>
                         </ScrollReveal3D>
 
-                        <ScrollReveal3D delay={0.4}>
-                            <div className="relative inline-block group mt-8 md:mt-16">
-                                <div className="relative p-[2px] rounded-full overflow-hidden hover:scale-105 transition-transform duration-300 cursor-pointer" onClick={() => setPage('analyze')}>
+                        <ScrollReveal3D delay={0.3}>
+                            <div className="relative inline-block group mt-6 md:mt-10">
+                                <div className="relative p-[1.5px] rounded-full overflow-hidden hover:scale-105 transition-transform duration-300 cursor-pointer" onClick={() => setPage('analyze')}>
                                     <div className="absolute top-1/2 left-1/2 w-[300%] h-[300%] -translate-x-1/2 -translate-y-1/2 animate-spin-border bg-[conic-gradient(from_0deg,transparent_0%,transparent_60%,#2dd4bf_80%,#3b82f6_100%)]" />
                                     
-                                    <button className="relative z-10 px-8 py-4 sm:px-12 sm:py-6 md:px-20 md:py-10 bg-[#0b1121] rounded-full font-tech font-black text-2xl sm:text-3xl md:text-5xl lg:text-6xl flex items-center justify-center gap-3 sm:gap-4 md:gap-6 text-white w-full sm:w-auto">
-                                        LAUNCH <Play fill="currentColor" className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-teal-400" />
+                                    <button className="relative z-10 px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 bg-[#0b1121] rounded-full font-tech font-black text-xl sm:text-2xl md:text-3xl flex items-center justify-center gap-2 md:gap-4 text-white w-full sm:w-auto">
+                                        LAUNCH <Play fill="currentColor" className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-teal-400" />
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-teal-400/20 to-transparent w-full h-full animate-shimmer-fast mix-blend-overlay rounded-full" />
                                     </button>
                                 </div>
