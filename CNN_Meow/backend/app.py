@@ -2,8 +2,8 @@
 Pet Insight 360 — FastAPI Backend (LangChain + LangGraph Edition)
 Hybrid AI Pipeline:
   1. Custom CNN (MobileNetV2) → Emotion Detection
-  2. LangChain + Gemini 1.5 Pro Vision → Breed Identification (Zero-shot)
-  3. LangChain + Gemini 1.5 Pro LLM → Veterinary Advisor (Persona Prompting)
+  2. LangChain + gemini-2.5-flash Vision → Breed Identification (Zero-shot)
+  3. LangChain + gemini-2.5-flash LLM → Veterinary Advisor (Persona Prompting)
   4. LangGraph → Orchestrates the full analysis pipeline
 
 Run with:
@@ -64,7 +64,7 @@ llm_vision = None
 try:
     api_key = os.environ.get("GOOGLE_API_KEY", "")
     if api_key:
-        # Gemini 1.5 Pro for vet advice (text)
+        # gemini-2.5-flash for vet advice (text)
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
             temperature=0.7,
@@ -72,7 +72,7 @@ try:
             google_api_key=api_key,
             model_kwargs={"thinking_config": {"thinking_budget": 0}},  # ✅ ปิด thinking
         )
-        # Gemini 1.5 Pro for breed identification (vision)
+        # gemini-2.5-flash for breed identification (vision)
         llm_vision = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash",
             temperature=0.3,
@@ -80,7 +80,7 @@ try:
             google_api_key=api_key,
         )
         LLM_READY = True
-        print("[OK] LangChain ChatGoogleGenerativeAI initialized (Gemini 1.5 Pro)")
+        print("[OK] LangChain ChatGoogleGenerativeAI initialized (gemini-2.5-flash)")
     else:
         print("[WARN] No GOOGLE_API_KEY — LLM features disabled")
 except Exception as e:
@@ -529,7 +529,7 @@ def is_animal_image(img_pil: Image.Image, threshold: float = 0.05) -> tuple[bool
 
 
 def identify_breed(img_pil: Image.Image) -> dict:
-    """Step 2: Use LangChain + Gemini 1.5 Pro Vision for zero-shot breed identification.
+    """Step 2: Use LangChain + gemini-2.5-flash Vision for zero-shot breed identification.
     Falls back to ImageNet classifier if LLM is unavailable or fails."""
     
     # Try LLM first if available
@@ -927,7 +927,7 @@ def health():
         "model_ready": MODEL_READY,
         "llm_ready": LLM_READY,
         "mlflow_ready": MLFLOW_READY,
-        "langchain": "ChatGoogleGenerativeAI (Gemini 1.5 Pro)",
+        "langchain": "ChatGoogleGenerativeAI (Gemini 2.5 flash)",
         "langgraph": "emotion → breed → advisor",
         "device": DEVICE,
         "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU",
@@ -939,7 +939,7 @@ async def analyze(file: UploadFile = File(...), plan: str = "free"):
     """Run the analysis pipeline on an uploaded pet image.
     
     - plan='free'    → CNN emotion only + fallback breed/advice (no LLM)
-    - plan='premium' → Full LangGraph pipeline (CNN + GPT-4o Vision + GPT-4o Vet)
+    - plan='premium' → Full LangGraph pipeline (CNN + Gemini 2.5 flash Vision + Gemini 2.5 flash Vet)
     """
     if not file.content_type.startswith("image/"):
         raise HTTPException(400, "File must be an image")
@@ -1021,7 +1021,7 @@ async def analyze(file: UploadFile = File(...), plan: str = "free"):
             "advice":       result["advice"],
             "image_base64": img_b64,
             "elapsed_ms":   elapsed,
-            "pipeline":     "LangGraph: emotion_detector → breed_identifier → vet_advisor (Gemini 1.5 Pro)",
+            "pipeline":     "LangGraph: emotion_detector → breed_identifier → vet_advisor (Gemini 2.5 flash)",
             "llm_used":     True,
         }
     else:
