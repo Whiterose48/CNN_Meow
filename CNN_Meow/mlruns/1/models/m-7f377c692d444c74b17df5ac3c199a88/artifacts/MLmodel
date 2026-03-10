@@ -1,0 +1,23 @@
+artifact_path: /Users/iam.pxk/Desktop/CNN_Meow/mlruns/1/models/m-7f377c692d444c74b17df5ac3c199a88/artifacts
+flavors:
+  python_function:
+    config:
+      device: null
+    data: data
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.pytorch
+    pickle_module_name: mlflow.pytorch.pickle_module
+    python_version: 3.13.11
+  pytorch:
+    code: null
+    model_data: data
+    pytorch_version: 2.10.0
+mlflow_version: 3.10.0
+model_id: m-7f377c692d444c74b17df5ac3c199a88
+model_size_bytes: 10479967
+model_uuid: m-7f377c692d444c74b17df5ac3c199a88
+prompts: null
+run_id: 6f5179b88afa41c78719360f02019268
+utc_time_created: '2026-03-02 09:51:43.749626'
