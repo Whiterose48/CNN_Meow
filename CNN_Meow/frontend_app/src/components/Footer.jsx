@@ -6,7 +6,7 @@ const members = [
     { id: 'phruk', name: 'Phruk', role: 'AI Data Engineer & Full-Stack', short: 'DATA ENG', icon: Database },
     { id: 'poom', name: 'Poom', role: 'Project Manager & AI Engineer', short: 'PM / AI', icon: Code },
     { id: 'boss', name: 'Boss', role: 'UX/UI Designer', short: 'UX / UI', icon: Target },
-    { id: 'nut', name: 'Nut', role: 'Cloud Developer & Software Tester', short: 'CLOUD DEV / TESTER', icon: Zap },
+    { id: 'nut', name: 'Nut', role: 'Cloud Developer & Software Tester', short: 'CLOUD DEV / Tester', icon: Zap },
 ]
 
 export default function Footer({ setPage }) {

@@ -58,7 +58,7 @@ const WealthVault = () => {
 // ─── 2. DATA (2 PLANS) ───
 const PLANS = [
     { id: 'free', name: 'Essential', sub: 'FREE_ACCESS', price: '0', icon: Rocket, color: '#94A3B8', features: ['วิเคราะห์อารมณ์สัตว์เลี้ยง (CNN Emotion)', 'แสดงผลอารมณ์ + ค่าความมั่นใจ', 'คำแนะนำเบื้องต้นจากระบบ Fallback', 'ไม่จำกัดจำนวนการสแกน'], target: 'Standard Unit' },
-    { id: 'premium', name: 'Pro Parent', sub: 'PREMIUM_CORE', price: '299', icon: Crown, color: '#FFD700', popular: true, features: ['วิเคราะห์อารมณ์แบบ Deep Neural Scan', 'ระบุสายพันธุ์ด้วย ImageNet AI (150+ สายพันธุ์)', 'คำแนะนำสัตวแพทย์โดย GPT-4o + LangChain', 'บันทึกประวัติ 30 วัน (Dashboard Sync)', 'AI Agent ให้คำปรึกษา 24/7'], target: 'Elite Unit' },
+    { id: 'premium', name: 'Pro Parent', sub: 'PREMIUM_CORE', price: '299', icon: Crown, color: '#FFD700', popular: true, features: ['วิเคราะห์อารมณ์แบบ Deep Neural Scan', 'ระบุสายพันธุ์ด้วย ImageNet AI (150+ สายพันธุ์)', 'คำแนะนำสัตวแพทย์โดย Gemini-2.5-Flash + LangChain', 'บันทึกประวัติ 30 วัน (Dashboard Sync)', 'AI Agent ให้คำปรึกษา 24/7'], target: 'Elite Unit' },
 ]
 
 export default function Plans({ setPage, setPlan }) {
