@@ -1,7 +1,7 @@
 # 🐾 Pet Insight 360 — AI Pet Emotion & Breed Analyzer
 
 > ระบบวิเคราะห์อารมณ์ สายพันธุ์ และให้คำแนะนำสุขภาพสัตว์เลี้ยงด้วย AI แบบครบวงจร  
-> **Custom CNN (MobileNetV2)** → Emotion Detection | **ImageNet + LangChain GPT-4o Vision** → Breed ID | **LangGraph** → Pipeline Orchestration
+> **Custom CNN (MobileNetV2)** → Emotion Detection | **ImageNet + LangChain 2.5 Gemini Flash Vision** → Breed ID | **LangGraph** → Pipeline Orchestration
 
 ---
 
@@ -35,8 +35,8 @@
 | ขั้นตอน | สิ่งที่ทำ | เทคนิค AI |
 |---------|-----------|-----------|
 | **1. Emotion Detection** | ตรวจจับอารมณ์สัตว์ 4 กลุ่ม (Happy, Sad, Angry, Other) | Custom CNN — MobileNetV2 (Transfer Learning) |
-| **2. Breed Identification** | ระบุสายพันธุ์สัตว์ 150+ ชนิด พร้อมคำอธิบายภาษาไทย | ImageNet MobileNetV2 + GPT-4o Vision (Zero-shot) |
-| **3. Veterinary Advice** | ให้คำแนะนำสุขภาพเฉพาะสายพันธุ์ + อารมณ์ที่ตรวจพบ | LangChain Persona Prompting + GPT-4o LLM |
+| **2. Breed Identification** | ระบุสายพันธุ์สัตว์ 150+ ชนิด พร้อมคำอธิบายภาษาไทย | ImageNet MobileNetV2 + 2.5 Gemini Flash Vision (Zero-shot) |
+| **3. Veterinary Advice** | ให้คำแนะนำสุขภาพเฉพาะสายพันธุ์ + อารมณ์ที่ตรวจพบ | LangChain Persona Prompting + 2.5 Gemini Flash LLM |
 
 ### แผนการใช้งาน (Plans)
 
@@ -44,9 +44,9 @@
 |---------|-----------|-------------|
 | Emotion Detection (CNN) | ✅ | ✅ |
 | Breed ID (ImageNet) | ✅ | ✅ |
-| Breed ID (GPT-4o Vision) | ❌ | ✅ |
+| Breed ID (2.5 Gemini Flash Vision) | ❌ | ✅ |
 | Vet Advice (Rule-based) | ✅ | — |
-| Vet Advice (GPT-4o AI) | ❌ | ✅ |
+| Vet Advice (2.5 Gemini Flash AI) | ❌ | ✅ |
 | LangGraph Pipeline | ❌ | ✅ |
 
 ### สิ่งที่ระบบรองรับ
@@ -84,10 +84,10 @@
 │  │   ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐  │ │
 │  │   │ Node 1:          │    │ Node 2:          │    │ Node 3:          │  │ │
 │  │   │ Emotion Detector │───▶│ Breed Identifier │───▶│ Vet Advisor      │  │ │
-│  │   │ (Custom CNN)     │    │ (ImageNet/GPT-4o)│    │ (LangChain/GPT)  │  │ │
+│  │   │ (Custom CNN)     │    │ (ImageNet/2.5 Gemini Flash)│    │ (LangChain/GPT)  │  │ │
 │  │   └──────────────────┘    └──────────────────┘    └──────────────────┘  │ │
 │  │         MobileNetV2              MobileNetV2           ChatOpenAI       │ │
-│  │       (Fine-tuned 4cls)        (ImageNet 1000)       (GPT-4o LLM)      │ │
+│  │       (Fine-tuned 4cls)        (ImageNet 1000)       (2.5 Gemini Flash LLM)      │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
 │                                                                             │
 │  ┌───────────────┐                                                          │
@@ -99,7 +99,7 @@
 │  EXTERNAL SERVICES                                                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐                      │
 │  │ Firebase Auth │  │ OpenAI API   │  │ MLflow       │                      │
-│  │ (Google SSO)  │  │ (GPT-4o)     │  │ (Experiment  │                      │
+│  │ (Google SSO)  │  │ (2.5 Gemini Flash)     │  │ (Experiment  │                      │
 │  │               │  │              │  │  Tracking)   │                      │
 │  └──────────────┘  └──────────────┘  └──────────────┘                      │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -118,9 +118,9 @@
 | **PyTorch** | 2.6+ | Deep Learning Framework (CNN) |
 | **TorchVision** | 0.21+ | Pre-trained MobileNetV2 + Image Transforms |
 | **LangChain** | 0.3+ | LLM Orchestration (Prompt Template, Chain, Output Parser) |
-| **LangChain-OpenAI** | 0.3+ | ChatOpenAI wrapper for GPT-4o |
+| **LangChain-OpenAI** | 0.3+ | ChatOpenAI wrapper for 2.5 Gemini Flash |
 | **LangGraph** | 0.2+ | Stateful Graph Pipeline (StateGraph) |
-| **OpenAI** | 1.58+ | GPT-4o Vision + Text API |
+| **OpenAI** | 1.58+ | 2.5 Gemini Flash Vision + Text API |
 | **MLflow** | 3.10+ | Experiment Tracking, Model Registry |
 | **OpenCV** | 4.10+ | Image processing (headless) |
 | **Pillow** | 11+ | Image I/O |
@@ -180,16 +180,16 @@ ImageNet Pre-trained MobileNetV2 (1000 classes)
 - **Pooling**: AdaptiveAvgPool2d(1) → ลดมิติเป็น 1x1
 - **Input Size**: 224×224 px, Normalized ด้วย ImageNet mean/std
 
-### 4.2 Zero-shot Classification — GPT-4o Vision
+### 4.2 Zero-shot Classification — 2.5 Gemini Flash Vision
 
-- ส่งภาพเป็น Base64 ไปยัง GPT-4o Vision ผ่าน LangChain `ChatOpenAI`
+- ส่งภาพเป็น Base64 ไปยัง 2.5 Gemini Flash Vision ผ่าน LangChain `ChatOpenAI`
 - Prompt สั่งให้ระบุ species + breed + confidence + traits
 - Response: JSON structured output
 - **Fallback**: ถ้า LLM ไม่พร้อม → ใช้ ImageNet MobileNetV2 (1000 classes) แทน
 
 ### 4.3 Persona Prompting — Veterinary Advisor
 
-- ใช้ `ChatPromptTemplate` สร้าง System Prompt ให้ GPT-4o เป็น "Expert Veterinary Behaviorist"
+- ใช้ `ChatPromptTemplate` สร้าง System Prompt ให้ 2.5 Gemini Flash เป็น "Expert Veterinary Behaviorist"
 - ส่งข้อมูล species, breed, emotion, confidence เข้า Prompt
 - สั่งให้ตอบ 3 หัวข้อ: Healthcare, Lifestyle, Safety
 - **Constraint**: ต้อง breed-specific ห้ามตอบแบบ generic
@@ -280,10 +280,10 @@ ImageNet Pre-trained MobileNetV2 (1000 classes)
        │   │ emotion_detector (CNN)                    │   │ │
        │   │   → emotion, confidence, scores           │   │ │
        │   │                                            │   │ │
-       │   │ breed_identifier (GPT-4o Vision/ImageNet)  │   │ │
+       │   │ breed_identifier (2.5 Gemini Flash Vision/ImageNet)  │   │ │
        │   │   → species, breed, traits                 │   │ │
        │   │                                            │   │ │
-       │   │ vet_advisor (LangChain GPT-4o/Fallback)    │   │ │
+       │   │ vet_advisor (LangChain 2.5 Gemini Flash/Fallback)    │   │ │
        │   │   → structured advice text                 │   │ │
        │   └──────────────────────────────────────────┘   │ │
        │   └── Return JSON with llm_used=true             │ │
@@ -403,15 +403,15 @@ _imagenet_model = models.mobilenet_v2(weights=MobileNet_V2_Weights.IMAGENET1K_V1
 #### ส่วนที่ 3: LangChain — Breed ID & Vet Advisor (บรรทัด ~495–720)
 
 ```python
-# GPT-4o Vision สำหรับระบุสายพันธุ์ (Zero-shot)
+# 2.5 Gemini Flash Vision สำหรับระบุสายพันธุ์ (Zero-shot)
 llm_vision = ChatOpenAI(model="gpt-4o", temperature=0.3, max_tokens=200)
 
-# GPT-4o Text สำหรับคำแนะนำสัตวแพทย์ (Persona Prompting)
+# 2.5 Gemini Flash Text สำหรับคำแนะนำสัตวแพทย์ (Persona Prompting)
 llm = ChatOpenAI(model="gpt-4o", temperature=0.7, max_tokens=800)
 ```
 
 **`identify_breed()`** — ระบุสายพันธุ์:
-1. ลอง LLM ก่อน: ส่งภาพ Base64 + Prompt → GPT-4o Vision → JSON response
+1. ลอง LLM ก่อน: ส่งภาพ Base64 + Prompt → 2.5 Gemini Flash Vision → JSON response
 2. ถ้า LLM ล้มเหลวหรือไม่มี API Key → fallback ไป `_classify_breed_imagenet()`
 
 **`vet_prompt`** — ChatPromptTemplate:
@@ -815,7 +815,7 @@ curl -X POST http://localhost:8000/analyze \
 | **Docker** | 24+ | สำหรับ Docker Compose deployment |
 | **Docker Compose** | v2+ | มากับ Docker Desktop |
 | **Git** | 2.x | Clone โปรเจกต์ |
-| **OpenAI API Key** | — | ต้องมีสำหรับ Premium plan (GPT-4o) |
+| **OpenAI API Key** | — | ต้องมีสำหรับ Premium plan (2.5 Gemini Flash) |
 | **Firebase Project** | — | ต้องมีสำหรับ Google Sign-in |
 
 > **รันแบบ Manual** ต้องเพิ่ม: Python 3.11+, Node.js 20+, pnpm
